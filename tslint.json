@@ -1,0 +1,8 @@
+{
+  "rules": {
+    "no-console": false,
+    "no-trailing-whitespace": false,
+    "semicolon": false,
+    "no-implicit-dependencies": false
+  }
+}
