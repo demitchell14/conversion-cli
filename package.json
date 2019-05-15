@@ -63,7 +63,7 @@
   },
   "repository": "demitchell14/conversion-cli",
   "scripts": {
-    "start": "node ./bin/run convert idmp names -l 250",
+    "start": "node ./bin/run convert atyp atyp-address -l 250 -S log.log",
     "alias": "node ./bin/run convert idap alias -l 250",
     "watch": "tsc -w",
     "postpack": "rimraf oclif.manifest.json",

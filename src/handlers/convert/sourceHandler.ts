@@ -1,9 +1,19 @@
 import {SqlClient} from 'msnodesqlv8';
+import {IIDMRowData} from '../../tables'
 const sql: SqlClient = require('msnodesqlv8');
 
-import {IIDMRowData} from './handlers'
 
-export class ImportHandler {
+export declare interface SourceHandler {
+  limit: number;
+  offset: number;
+  table?: string;
+  connectString: string;
+  new (props: ImportHandlerProps);
+  execute(offset:number): AsyncIterableIterator<Array<Partial<any>>>
+  query(query: string): Promise<any>
+}
+
+export class SourceHandler {
   limit: number;
   offset: number;
   table?: string;
@@ -18,11 +28,12 @@ export class ImportHandler {
 
   statements = {
     idmp: (offset:number) => `SELECT * FROM dbo.IDMP ORDER BY IDM_IDM_NO OFFSET ${offset} ROWS FETCH NEXT ${this.limit} ROWS ONLY;`,
-    idap: (offset:number) => `DELETE FROM dbo.DCT_Persons_Aliases_Staging; SELECT * FROM dbo.IDAP ORDER BY IDA_IDM_NO OFFSET ${offset} ROWS FETCH NEXT ${this.limit} ROWS ONLY;`,
-    test: (offset?) => `DELETE FROM dbo.DCT_Persons_Staging;SELECT * FROM dbo.IDMP ORDER BY IDM_IDM_NO OFFSET ${offset} ROWS FETCH NEXT ${this.limit} ROWS ONLY;`,
+    idap: (offset:number) => `SELECT * FROM dbo.IDAP ORDER BY IDA_IDM_NO OFFSET ${offset} ROWS FETCH NEXT ${this.limit} ROWS ONLY;`,
+    test: (offset?) => `SELECT * FROM dbo.IDMP ORDER BY IDM_IDM_NO OFFSET ${offset} ROWS FETCH NEXT ${this.limit} ROWS ONLY;`,
+    atyp: (offset:number) => `SELECT * FROM dt.atyp WHERE SUBSTRING(aty_bar_no,1,3) <> 'BND' AND aty_bar_no <> '       1' ORDER BY ATY_BAR_NO OFFSET ${offset} ROWS FETCH NEXT ${this.limit} ROWS ONLY;`
   }
 
-  async *execute(offset = this.offset): AsyncIterableIterator<Array<Partial<IIDMRowData>>> {
+  async *execute(offset = this.offset): AsyncIterableIterator<Array<Partial<any>>> {
     let rows = [];
     let running = true;
 
@@ -30,6 +41,7 @@ export class ImportHandler {
       throw "No table defined";
 
     const statementFn = this.statements[this.table];
+
 
     while (running) {
       const statementComponenets = statementFn(offset).split(";");
@@ -77,5 +89,5 @@ export class ImportHandler {
 interface ImportHandlerProps {
   limit?: number;
   offset?: number;
-  table: string;
+  table?: string;
 }

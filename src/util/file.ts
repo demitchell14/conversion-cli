@@ -1,11 +1,18 @@
 import * as fs from 'fs';
 import * as path from "path";
-import {IIDMRowData} from './handlers'
+import {IIDMRowData} from '../tables'
 
 
 
-export const writeStatementToFile = async statement => {
-  fs.appendFileSync('./statements.sql', statement + '\n', {encoding: 'UTF-8'});
+
+export const writeStatementToFile = async (file:string, statement: any) => {
+  if (typeof statement === "object") {
+    if (statement instanceof Array)
+      statement = statement.map(k => typeof k === "object" ? JSON.stringify(k) : k).join("\n");
+    else
+      statement = JSON.stringify(statement);
+  }
+  fs.appendFileSync(path.join(process.cwd(), file), statement + '\n', {encoding: 'UTF-8'});
 }
 export const writeSuccessToFile = async (file:string, data: Partial<IIDMRowData>[]) => {
     // console.log(res, data);

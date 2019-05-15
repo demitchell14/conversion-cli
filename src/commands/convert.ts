@@ -1,10 +1,7 @@
 import {Command, flags} from '@oclif/command'
 import * as Parser from '@oclif/parser';
-import {writeErrorToFile, writeSuccessToFile} from '../file'
-import {getHandler} from "../handlers";
-import NamesHandler from '../handlers/names'
-import RetrieveHandler from '../handlers/retrieve'
-import {ImportHandler} from "../ImportHandler";
+import {writeErrorToFile, writeSuccessToFile, writeStatementToFile} from '../util/file'
+import {SourceHandler, DestinationHandler, RetrieveHandler, getHandler, NamesHandler} from "../handlers/convert"
 
 export default class Convert extends Command {
   static description = 'describe the command here'
@@ -39,45 +36,83 @@ export default class Convert extends Command {
     const {args, flags} = this.parse(Convert);
     const {source, destination} = args;
 
-    const Retriever = new ImportHandler({
+    const sourceClass = await getHandler(source) as SourceHandler;
+    const destinationClass = await getHandler(destination) as DestinationHandler;
+
+    if (typeof sourceClass === "undefined" || typeof destinationClass === "undefined") {
+      throw Error("Source or Destination are not recognized");
+    }
+
+    const sourceHandler = new sourceClass({
       table: source,
       limit: flags.limit,
       offset: flags.offset,
-    });
+    }) as RetrieveHandler;
 
-    const importerClass = await getHandler(destination);
-    // @ts-ignore
-    const importer = new importerClass({
+    const destinationHandler = new destinationClass({
       limit: flags.limit,
       offset: flags.offset,
     }) as NamesHandler;
 
-    const generator = Retriever.execute();
+
+
+    const generator = sourceHandler.execute();
     let i = 0;
     while (true) {
       const rows = (await generator.next());
-      // console.log(rows);
-      if (rows.done) {
-        break;
-      }
+      if (rows.done) break;
+
       if (rows.value && rows.value.length > 0) {
-        // console.log(rows.value);
-        importer.calculateFields(importer.convert(rows.value[0]));
-        const values = rows.value.map(row => importer.convert(row));
+        const converted = Object.values(rows.value).map(k => destinationHandler.convert(k));
 
-        importer.import(values)
-          .then(() => console.log(`Loop #${++i} completed`))
-          .then((res) => flags.logs ? writeSuccessToFile(flags.logs, rows.value) : undefined)
-          .catch(err => flags.errors ? writeErrorToFile(flags.errors, err) : undefined)
-          .catch(err => console.error(err));
-
+        destinationHandler.import(converted)
+              .then(() => console.log(`Loop #${++i} completed`))
+              .then((res) => flags.statements ? writeStatementToFile(flags.statements, rows.value) : undefined)
+              .then((res) => flags.logs ? writeSuccessToFile(flags.logs, rows.value) : undefined)
+              .catch(err => flags.errors ? writeErrorToFile(flags.errors, err) : undefined)
+              .catch(err => console.error(err));
       }
     }
 
-    // const name = flags.name || 'world'
-    // this.log(`hello ${name} from .\\src\\commands\\hello.ts`)
-    // if (args.file && flags.force) {
-    //   this.log(`you input --force and --file: ${args.file}`)
+
+
+    // const Retriever = new SourceHandler({
+    //   table: source,
+    //   limit: flags.limit,
+    //   offset: flags.offset,
+    // });
+
+    // const importerClass = await getHandler(destination);
+    //
+    // // @ts-ignore
+    // const importer = new importerClass({
+    //   limit: flags.limit,
+    //   offset: flags.offset,
+    // })
+    //
+    //
+    // const generator = Retriever.execute();
+    // let i = 0;
+    // while (true) {
+    //   const rows = (await generator.next());
+    //   // console.log(rows);
+    //   if (rows.done) {
+    //     break;
+    //   }
+    //   if (rows.value && rows.value.length > 0) {
+    //     // console.log(rows.value);
+    //     importer.calculateFields(importer.convert(rows.value[0]));
+    //     const values = rows.value.map(row => importer.convert(row));
+    //
+    //     importer.import(values)
+    //       .then(() => console.log(`Loop #${++i} completed`))
+    //       .then((res) => flags.logs ? writeSuccessToFile(flags.logs, rows.value) : undefined)
+    //       .then((res) => flags.statements ? writeStatementToFile(flags.statements, rows.value) : undefined)
+    //       .catch(err => flags.errors ? writeErrorToFile(flags.errors, err) : undefined)
+    //       .catch(err => console.error(err));
+    //
+    //   }
     // }
+
   }
 }

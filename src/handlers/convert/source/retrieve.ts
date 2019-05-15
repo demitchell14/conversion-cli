@@ -1,22 +1,19 @@
 import {SqlClient} from 'msnodesqlv8';
+import {HandlerProps} from '../../../interfaces'
+import {IIDMRowData} from '../../../tables'
+import {SourceHandler} from '../'
 
-import {Handler, HandlerProps, IIDMRowData} from './index'
 const sql: SqlClient = require('msnodesqlv8');
 
-export default class RetrieveHandler extends Handler {
-  table: string;
+export default class RetrieveHandler extends SourceHandler {
   selectors: string | '*';
   statement: (offset: number) => string;
-  offset: number;
-  limit: number;
   key: string;
 
   constructor(props: RetrieveHandlerProps) {
     super(props);
     this.table = props.table;
     this.selectors = props.selectors || '*'
-    this.offset = props.offset || 0;
-    this.limit = props.limit || 1;
     this.key = props.key;
 
     this.statement = offset => `SELECT ${this.selectors} FROM ${this.table} ORDER BY ${this.key} OFFSET ${offset} ROWS FETCH NEXT ${this.limit} ROWS ONLY;`;

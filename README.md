@@ -28,17 +28,21 @@ USAGE
 <!-- usagestop -->
 # Commands
 <!-- commands -->
-* [`cli convert FROM HANDLER`](#cli-convert-from-handler)
+* [`cli convert SOURCE DESTINATION`](#cli-convert-source-destination)
 * [`cli hello [FILE]`](#cli-hello-file)
 * [`cli help [COMMAND]`](#cli-help-command)
 
-## `cli convert FROM HANDLER`
+## `cli convert SOURCE DESTINATION`
 
 describe the command here
 
 ```
 USAGE
-  $ cli convert FROM HANDLER
+  $ cli convert SOURCE DESTINATION
+
+ARGUMENTS
+  SOURCE       The handler identifier that is used to aggregate data to be converted
+  DESTINATION  The handler identifier that is used to tell the program how to convert
 
 OPTIONS
   -E, --errors=errors          File name to output errors to. Leave blank to not receive error logs
