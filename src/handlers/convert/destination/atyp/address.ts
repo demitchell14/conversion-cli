@@ -18,14 +18,21 @@ export default class AddressHandler extends DestinationHandler {
 
   }
 
-  import = async (data:STAGING.DCT_ADDRESSESS_STAGING[]) => {
+  import = (data:STAGING.DCT_ADDRESSESS_STAGING[]) => {
     if (data.length > 0) {
       let query =  `INSERT INTO dbo.DCT_Addresses_Staging (${Object.keys(data[0]).map(k => k).join(",")}) VALUES `
       query += data.map(data => `(${Object.values(data).map(k => k).join(",")})`).join(",")
       // console.log(query);
       // const response = await this.query(query)
       // console.log(response)
-      return query;
+
+      return { response: query, data };
+
+      const response = this.query(query);
+      return new Promise((resolve, reject) => {
+        response.then(res => resolve({response: res, data}));
+        response.catch(err => reject(err));
+      })
     }
     return "";
   }
