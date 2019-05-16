@@ -164,6 +164,22 @@ export declare namespace DT {
 }
 
 export declare namespace STAGING {
+  interface DCT_PERSONS_STAGING {
+    spn: string;
+    firstname: string;
+    middlename: string;
+    lastname: string;
+    displayname: string;
+    corp: string;
+    sealedflag: string;
+    is_attorney: string;
+    suffix_name: string;
+    comment_text: string;
+    date_time_created: string;
+    date_time_modified: string;
+    user_id: string;
+  }
+
   interface DCT_ADDRESSESS_STAGING {
     SPN: string,
     ADDRESSTYP: string,
