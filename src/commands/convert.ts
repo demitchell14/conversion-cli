@@ -1,10 +1,19 @@
 import {Command, flags} from '@oclif/command'
 import * as Parser from '@oclif/parser';
 import {writeErrorToFile, writeSuccessToFile, writeStatementToFile} from '../util/file'
-import {SourceHandler, DestinationHandler, RetrieveHandler, getHandler, NamesHandler} from "../handlers/convert"
+import {
+  SourceHandler,
+  DestinationHandler,
+  RetrieveHandler,
+  getHandler,
+  NamesHandler,
+  SourceHandlers, DestinationHandlers
+} from "../handlers/convert"
+
 
 export default class Convert extends Command {
-  static description = 'describe the command here'
+  static description =
+    `Convert command is currently used to convert CUC Database data.`
 
   static examples = [
     `$ cli convert [from] [to] [handler]
@@ -27,8 +36,19 @@ export default class Convert extends Command {
   }
 
   static args = [
-    {name: 'source', required: true, description: "The handler identifier that is used to aggregate data to be converted"},
-    {name: 'destination', required: true, description: "The handler identifier that is used to tell the program how to convert"},
+    {
+      name: 'source',
+      required: true,
+      description: `The handler identifier that is used to aggregate data to be converted.
+      Each supplies a unique action`,
+      options: Object.keys(SourceHandlers)
+    },
+    {
+      name: 'destination',
+      required: true,
+      description: "The handler identifier that is used to tell the program how to convert",
+      options: Object.keys(DestinationHandlers)
+    },
   ] as Parser.args.IArg[];
 
 
@@ -65,12 +85,20 @@ export default class Convert extends Command {
       if (rows.value && rows.value.length > 0) {
         const converted = Object.values(rows.value).map(k => destinationHandler.convert(k));
 
-        destinationHandler.import(converted)
-              .then(() => console.log(`Loop #${++i} completed`))
-              .then((res) => flags.statements ? writeStatementToFile(flags.statements, rows.value) : undefined)
-              .then((res) => flags.logs ? writeSuccessToFile(flags.logs, rows.value) : undefined)
-              .catch(err => flags.errors ? writeErrorToFile(flags.errors, err) : undefined)
-              .catch(err => console.error(err));
+        const action = destinationHandler.import(converted)
+
+        action.then(() => console.log(`Loop #${++i} completed`));
+        action.then(res => flags.statements ? writeStatementToFile(flags.statements, res.response) : undefined);
+        action.then(() => flags.logs ? writeSuccessToFile(flags.logs, rows.value) : undefined);
+        // action.then((res => flags.statements ? writeStatementToFile(flags.statements, res.data) : undefined) : undefined)
+        action.catch(err => flags.errors ? writeErrorToFile(flags.errors, err) : undefined);
+        action.catch(err => console.error(err));
+              // .then(() => console.log(`Loop #${++i} completed`))
+              // //@ts-ignore
+              // .then((res) => flags.statements ? writeStatementToFile(flags.statements, res.response) : undefined)
+              // .then((res) => flags.logs ? writeSuccessToFile(flags.logs, rows.value) : undefined)
+              // .catch(err => {flags.errors ? writeErrorToFile(flags.errors, err) : undefined; return err})
+              // .catch(err => console.error(err));
       }
     }
 
