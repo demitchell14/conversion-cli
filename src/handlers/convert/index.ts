@@ -11,13 +11,14 @@ export {default as NamesHandler} from "./destination/names";
 export {default as AddressHandler} from "./destination/address";
 
 
-const DestinationHandlers = {
+export const DestinationHandlers = {
   names: "./destination/names",
   address: "./destination/address",
   "atyp-address": "./destination/atyp/address",
+  "atyp-names": "./destination/atyp/names",
 }
 
-const SourceHandlers = {
+export const SourceHandlers = {
   idmp: "./source/retrieve",
   idap: "./source/retrieve",
   atyp: "./source/retrieve",
