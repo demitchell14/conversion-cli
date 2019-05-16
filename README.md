@@ -34,15 +34,17 @@ USAGE
 
 ## `cli convert SOURCE DESTINATION`
 
-describe the command here
+Convert command is currently used to convert CUC Database data.
 
 ```
 USAGE
   $ cli convert SOURCE DESTINATION
 
 ARGUMENTS
-  SOURCE       The handler identifier that is used to aggregate data to be converted
-  DESTINATION  The handler identifier that is used to tell the program how to convert
+  SOURCE       (idmp|idap|atyp|retrieve) The handler identifier that is used to aggregate data to be converted
+
+  DESTINATION  (names|address|atyp-address|atyp-names) The handler identifier that is used to tell the program how to
+               convert
 
 OPTIONS
   -E, --errors=errors          File name to output errors to. Leave blank to not receive error logs
@@ -53,6 +55,16 @@ OPTIONS
   -l, --limit=limit            Number to indicate how many records to import at a time
   -o, --offset=offset          Number to Indicate the start point where to begin importing from
   -s, --selector=selector      String indicating field names to select delimited by a single comma in between
+
+DESCRIPTION
+  Convert command is currently used to convert CUC Database data.
+       There are 2 required arguments.
+       <source> - which is used to call a specific source handler class
+       <destination> - which is used to call a specific destination class
+    
+       Source Handlers
+       ---------------
+       retrieve -
 
 EXAMPLE
   $ cli convert [from] [to] [handler]
