@@ -31,6 +31,7 @@ USAGE
 * [`cli convert SOURCE DESTINATION`](#cli-convert-source-destination)
 * [`cli hello [FILE]`](#cli-hello-file)
 * [`cli help [COMMAND]`](#cli-help-command)
+* [`cli parse-csv SOURCE DESTINATION`](#cli-parse-csv-source-destination)
 
 ## `cli convert SOURCE DESTINATION`
 
@@ -41,7 +42,8 @@ USAGE
   $ cli convert SOURCE DESTINATION
 
 ARGUMENTS
-  SOURCE       (idmp|idap|atyp|retrieve) The handler identifier that is used to aggregate data to be converted
+  SOURCE       (idmp|idap|atyp|retrieve) The handler identifier that is used to aggregate data to be converted.
+               Each supplies a unique action
 
   DESTINATION  (names|address|atyp-address|atyp-names) The handler identifier that is used to tell the program how to
                convert
@@ -55,16 +57,6 @@ OPTIONS
   -l, --limit=limit            Number to indicate how many records to import at a time
   -o, --offset=offset          Number to Indicate the start point where to begin importing from
   -s, --selector=selector      String indicating field names to select delimited by a single comma in between
-
-DESCRIPTION
-  Convert command is currently used to convert CUC Database data.
-       There are 2 required arguments.
-       <source> - which is used to call a specific source handler class
-       <destination> - which is used to call a specific destination class
-    
-       Source Handlers
-       ---------------
-       retrieve -
 
 EXAMPLE
   $ cli convert [from] [to] [handler]
@@ -109,4 +101,25 @@ OPTIONS
 ```
 
 _See code: [@oclif/plugin-help](https://github.com/oclif/plugin-help/blob/v2.1.6/src\commands\help.ts)_
+
+## `cli parse-csv SOURCE DESTINATION`
+
+describe the command here
+
+```
+USAGE
+  $ cli parse-csv SOURCE DESTINATION
+
+ARGUMENTS
+  SOURCE       The relative, or absolute location of a CSV that needs to be converted
+  DESTINATION  The relative, or absolute location to generate the file
+
+OPTIONS
+  -h, --help  show CLI help
+
+EXAMPLE
+  $ run parse-csv <source file> <destination file>
+```
+
+_See code: [src\commands\parse-csv.ts](https://github.com/demitchell14/conversion-cli/blob/v0.0.0/src\commands\parse-csv.ts)_
 <!-- commandsstop -->
