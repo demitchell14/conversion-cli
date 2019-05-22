@@ -50,44 +50,30 @@ export default class ParseCSV extends Command {
       readable._read = () => {};
       readable.push(fs.readFileSync(file, {encoding: "UTF-8"}));
       readable.push(null);
-      let results = [] as any;
-      if (fs.existsSync(destination)) {
-        fs.unlinkSync(destination);
-      }
+      const results = [] as any;
       readable.pipe(csv({headers: false,}))
         .on("data", (data:any) => {
-          // results.push(data)
-          results.push(data);
-          if (results.length > 100000) {
-            complete(results)
-            results = [];
-          }
+          results.push(data)
           // console.log(results)
         }).on("error", (err) => {
         console.error(err);
       })
-        .on("end", () => {
-          if (results.length > 0)
-            complete(results)
-          console.log("Conversion Completed")
-        });
-        // .on("end", () => complete(results));
+        .on("end", () => complete(results));
     } catch (err) {
       clearTimeout(timeout);
       // console.error(err);
     }
 
-    const complete = (results:any) => {
-      if (!(results instanceof Array))
-        results = [results];
+    const complete = (results:any[]) => {
+      const toReturn = [] as string[];
       if (results.length > 0) {
         // toReturn.push(Object.keys(results[0]).join("{#}"));
       }
-      results = results.map(row => {
-        return (Object.values(row).join("{#}"))
+      results.map(row => {
+        toReturn.push(Object.values(row).join("{#}"))
       })
 
-      fs.appendFileSync(destination, results.join("\r\n"), {});
+      fs.writeFileSync(destination, toReturn.join("\r\n"));
       clearTimeout(timeout)
     };
   }
