@@ -30,7 +30,9 @@ export default class ParseCSV extends Command {
 
   async run() {
     const {args, flags} = this.parse(ParseCSV)
-    console.log(args);
+    console.log(`Source File:       ${args.source}`);
+    console.log(`Destination File:  ${args.destination}`);
+
     const {source, destination} = args;
     let file;
     if (path.isAbsolute(source)) {
@@ -39,71 +41,37 @@ export default class ParseCSV extends Command {
       file = path.join()
     }
 
-    let readable, timeout;
-    timeout = setTimeout(() => {
-      if (readable)
-        readable.destroy();
-      // res.sendStatus(500);
-    }, 10000);
 
 
     if (fs.existsSync(destination))
       fs.unlinkSync(destination);
 
     let total = 0;
-    let totalAppends = 0;
     let writable:WriteStream;
     try {
       writable = fs.createWriteStream(destination);
-      let results = [] as any;
       fs.createReadStream(file, {encoding: "UTF-8"})
         .pipe(csv({headers: false}))
-        .on('data', (data) => {
-          results.push(data);
-          if (results.length >= 100000) {
-            complete(writable, results)
-            results = [];
-          } else {
-          }
-        }).on("error", (err) => {
+        .on('data', (data) =>
+          complete(writable, data)
+        ).on("error", (err) => {
           console.log(err)
         })
         .on('end', () => {
-          if (results.length > 0) {
-            complete(writable, results)
-            // total += results.length;
-          }
-          console.log("Conversion Completed", "\nTotal Records: ", total, "\nTotal File Appends: ", totalAppends);
+          console.log("Conversion Completed", "\nTotal Records: ", total);
           writable.close();
         });
     } catch (err) {
-      clearTimeout(timeout);
       console.error(err);
     }
 
 
-    const complete = (stream:WriteStream, results:any) => {
-      if (!(results instanceof Array))
-        results = [results];
-      if (results.length > 0) {
-        // toReturn.push(Object.keys(results[0]).join("{#}"));
-      }
-      results = results.map(row => {
-        return (Object.values(row).join("{#}"))
-      })
-
-      total += results.length;
-
-      stream.write(results.join("\r\n") + "\r\n", "UTF-8", (err) => {
+    const complete = (stream:WriteStream, results:Object) => {
+      total ++;
+      stream.write(Object.values(results).join("{#}") + "\r\n", "UTF-8", (err) => {
         if (err)
           console.error(err);
       });
-      totalAppends++;
-
-
-
-      // fs.appendFileSync(destination, results.join("\r\n"), {});
-      clearTimeout(timeout)
     };
   }
 }
