@@ -1,5 +1,6 @@
 import {Command, flags} from '@oclif/command'
 import * as Parser from '@oclif/parser';
+import {WriteStream} from 'fs'
 import * as path from "path";
 import * as csv from "csv-parser";
 import * as fs from "fs";
@@ -45,24 +46,35 @@ export default class ParseCSV extends Command {
       // res.sendStatus(500);
     }, 10000);
 
-    const reader = fs.createReadStream(file, {encoding: "UTF-8"})
-    // reader.on("")
 
+    if (fs.existsSync(destination))
+      fs.unlinkSync(destination);
+
+    let total = 0;
+    let totalAppends = 0;
+    let writable:WriteStream;
     try {
+      writable = fs.createWriteStream(destination);
       let results = [] as any;
       fs.createReadStream(file, {encoding: "UTF-8"})
-        .pipe(csv())
+        .pipe(csv({headers: false}))
         .on('data', (data) => {
           results.push(data);
-          if (results.length > 100000) {
-            complete(results)
+          if (results.length >= 100000) {
+            complete(writable, results)
             results = [];
+          } else {
           }
+        }).on("error", (err) => {
+          console.log(err)
         })
         .on('end', () => {
-          if (results.length > 0)
-            complete(results)
-          console.log("Conversion Completed")
+          if (results.length > 0) {
+            complete(writable, results)
+            // total += results.length;
+          }
+          console.log("Conversion Completed", "\nTotal Records: ", total, "\nTotal File Appends: ", totalAppends);
+          writable.close();
         });
     } catch (err) {
       clearTimeout(timeout);
@@ -70,7 +82,7 @@ export default class ParseCSV extends Command {
     }
 
 
-    const complete = (results:any) => {
+    const complete = (stream:WriteStream, results:any) => {
       if (!(results instanceof Array))
         results = [results];
       if (results.length > 0) {
@@ -80,7 +92,17 @@ export default class ParseCSV extends Command {
         return (Object.values(row).join("{#}"))
       })
 
-      fs.appendFileSync(destination, results.join("\r\n"), {});
+      total += results.length;
+
+      stream.write(results.join("\r\n") + "\r\n", "UTF-8", (err) => {
+        if (err)
+          console.error(err);
+      });
+      totalAppends++;
+
+
+
+      // fs.appendFileSync(destination, results.join("\r\n"), {});
       clearTimeout(timeout)
     };
   }
