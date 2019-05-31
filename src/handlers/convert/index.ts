@@ -12,22 +12,31 @@ export {default as AddressHandler} from "./destination/address";
 
 
 export const DestinationHandlers = {
-  names: "./destination/names",
-  address: "./destination/address",
-  "atyp-address": "./destination/atyp/address",
-  "atyp-names": "./destination/atyp/names",
+  IDMpersons: "./destination/idm/persons",
+  IDMaddress: "./destination/idm/address",
+  ATYaddress: "./destination/aty/address",
+  ATYnames: "./destination/aty/names",
+  IDAnames: "./destination/ida/names",
 }
 
 export const SourceHandlers = {
-  idmp: "./source/retrieve",
+  idm2: "./source/retrieve",
+  idm3: "./source/retrieve",
   idap: "./source/retrieve",
   atyp: "./source/retrieve",
+  removeDupIDA: "./source/retrieve",
+  removeDupIDL: "./source/retrieve",
+  idm2demogr: "./source/retrieve",
   retrieve: "./source/retrieve",
 }
 
 // export function getHandler(name:"names"): Promise<SourceHandler>;
 // export function getHandler(name:"retrieve"): Promise<DestinationHandler>;
-export function getHandler(name:string):Promise<SourceHandler|DestinationHandler> {
+export function getHandler(name?:string):Promise<SourceHandler|DestinationHandler>|boolean {
+
+  if (typeof name === "undefined")
+    return false;
+
   const isDestination = Object.keys(DestinationHandlers).find(k => k === name);
   if (isDestination && DestinationHandlers[isDestination])
     return import(DestinationHandlers[isDestination]).then(obj => obj.default);

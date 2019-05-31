@@ -45,7 +45,7 @@ export default class Convert extends Command {
     },
     {
       name: 'destination',
-      required: true,
+      // required: true,
       description: "The handler identifier that is used to tell the program how to convert",
       options: Object.keys(DestinationHandlers)
     },
@@ -57,7 +57,7 @@ export default class Convert extends Command {
     const {source, destination} = args;
 
     const sourceClass = await getHandler(source) as SourceHandler;
-    const destinationClass = await getHandler(destination) as DestinationHandler;
+    const destinationClass = await getHandler(destination) as DestinationHandler|boolean;
 
     if (typeof sourceClass === "undefined" || typeof destinationClass === "undefined") {
       throw Error("Source or Destination are not recognized");
@@ -69,10 +69,13 @@ export default class Convert extends Command {
       offset: flags.offset,
     }) as RetrieveHandler;
 
-    const destinationHandler = new destinationClass({
-      limit: flags.limit,
-      offset: flags.offset,
-    }) as NamesHandler;
+    let destinationHandler;
+    if (typeof destinationClass !== "boolean") {
+      destinationHandler = new destinationClass({
+        limit: flags.limit,
+        offset: flags.offset,
+      }) as NamesHandler;
+    }
 
 
 
@@ -83,22 +86,26 @@ export default class Convert extends Command {
       if (rows.done) break;
 
       if (rows.value && rows.value.length > 0) {
-        const converted = Object.values(rows.value).map(k => destinationHandler.convert(k));
+        if (destinationHandler) {
+          const converted = Object.values(rows.value).map(k => destinationHandler.convert(k));
 
-        const action = destinationHandler.import(converted)
+          // console.log(converted)
 
-        action.then(() => console.log(`Loop #${++i} completed`));
-        action.then(res => flags.statements ? writeStatementToFile(flags.statements, res.response) : undefined);
-        action.then(() => flags.logs ? writeSuccessToFile(flags.logs, rows.value) : undefined);
-        // action.then((res => flags.statements ? writeStatementToFile(flags.statements, res.data) : undefined) : undefined)
-        action.catch(err => flags.errors ? writeErrorToFile(flags.errors, err) : undefined);
-        action.catch(err => console.error(err));
-              // .then(() => console.log(`Loop #${++i} completed`))
-              // //@ts-ignore
-              // .then((res) => flags.statements ? writeStatementToFile(flags.statements, res.response) : undefined)
-              // .then((res) => flags.logs ? writeSuccessToFile(flags.logs, rows.value) : undefined)
-              // .catch(err => {flags.errors ? writeErrorToFile(flags.errors, err) : undefined; return err})
-              // .catch(err => console.error(err));
+          const action = destinationHandler.import(converted)
+
+          action.then(() => console.log(`Loop #${++i} completed`));
+          action.then(res => flags.statements ? writeStatementToFile(flags.statements, res.response) : undefined);
+          action.then(() => flags.logs ? writeSuccessToFile(flags.logs, rows.value) : undefined);
+          // action.then((res => flags.statements ? writeStatementToFile(flags.statements, res.data) : undefined) : undefined)
+          action.catch(err => flags.errors ? writeErrorToFile(flags.errors, err) : undefined);
+          action.catch(err => console.error(err));
+          // .then(() => console.log(`Loop #${++i} completed`))
+          // //@ts-ignore
+          // .then((res) => flags.statements ? writeStatementToFile(flags.statements, res.response) : undefined)
+          // .then((res) => flags.logs ? writeSuccessToFile(flags.logs, rows.value) : undefined)
+          // .catch(err => {flags.errors ? writeErrorToFile(flags.errors, err) : undefined; return err})
+          // .catch(err => console.error(err));
+        }
       }
     }
 
