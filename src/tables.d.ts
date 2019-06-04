@@ -180,7 +180,16 @@ export declare namespace STAGING {
     user_id: string;
   }
 
-  interface DCT_ADDRESSESS_STAGING {
+    interface DCT_PERSON_ALIASES_STAGING {
+      spn: string;
+      first_name: string;
+      middle_name: string;
+      last_name: string;
+      display_name: string;
+      suffix_name: string;
+    }
+
+    interface DCT_ADDRESSESS_STAGING {
     SPN: string,
     ADDRESSTYP: string,
     PostedDate: string,

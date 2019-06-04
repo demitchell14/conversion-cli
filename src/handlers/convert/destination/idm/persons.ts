@@ -35,7 +35,7 @@ export default class NamesHandler extends DestinationHandler {
     const timestamp = new Date().toISOString().replace("T", " ").replace("Z", "");
 
     const response = {
-      spn: `'${data.IDM_IDM_NO}'`,
+      spn: `'${data.IDM_IDM_NO.trim()}'`,
       firstname: `'${name.first}'`,
       middlename: `'${name.middle}'`,
       lastname: `'${name.last}'`,

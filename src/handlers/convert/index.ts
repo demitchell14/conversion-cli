@@ -14,19 +14,24 @@ export {default as AddressHandler} from "./destination/address";
 export const DestinationHandlers = {
   IDMpersons: "./destination/idm/persons",
   IDMaddress: "./destination/idm/address",
+  IDApersons: "./destination/ida/persons",
   ATYaddress: "./destination/aty/address",
-  ATYnames: "./destination/aty/names",
-  IDAnames: "./destination/ida/names",
+  ATYpersons: "./destination/aty/persons",
 }
 
 export const SourceHandlers = {
-  idm2: "./source/retrieve",
-  idm3: "./source/retrieve",
-  idap: "./source/retrieve",
-  atyp: "./source/retrieve",
+  idmAll: "./source/retrieve",
+  idmAddr: "./source/retrieve",
+  idaAll: "./source/retrieve",
+  atyAll: "./source/retrieve",
   removeDupIDA: "./source/retrieve",
   removeDupIDL: "./source/retrieve",
+  idm2DL: "./source/retrieve",
   idm2demogr: "./source/retrieve",
+  idm2PhoneMain: "./source/retrieve",
+  idm2PhoneCell: "./source/retrieve",
+  idm2PhoneFax: "./source/retrieve",
+  idv2Vehicle: "./source/retrieve",
   retrieve: "./source/retrieve",
 }
 

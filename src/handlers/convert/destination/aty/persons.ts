@@ -1,3 +1,4 @@
+import {string} from '@oclif/command/lib/flags'
 import {SqlClient} from 'msnodesqlv8'
 import {DT, STAGING} from '../../../../tables'
 import {DestinationHandler} from '../../destinationHandler'
@@ -33,9 +34,18 @@ export default class NamesHandler extends DestinationHandler {
 
     const name = splitName(data.ATY_NAME.replace(/\s+/g, " ").replace(/'/g, "''"));
     const timestamp = new Date().toISOString().replace("T", " ").replace("Z", "");
+    let spn
+    if (data.ATY_BAR_NO.substr(0,3) !== 'BND')
+      {
+        spn = 'ATY_' + data.ATY_BAR_NO.trim()
+      }
+    else
+      {
+        spn = data.ATY_BAR_NO.trim()
+      }
 
     const response = {
-      spn: `'ATY_${data.ATY_BAR_NO.trim()}'`,
+      spn: `'${spn}'`,
       firstname: `'${name.first}'`,
       middlename: `'${name.middle}'`,
       lastname: `'${name.last}'`,

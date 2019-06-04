@@ -43,11 +43,19 @@ export default class AddressHandler extends DestinationHandler {
   convert = (data: DT.ATYP | any) => {
 
     const CSZ = splitCSZ(data.ATY_CITY_ST_ZIP);
-
     const timestamp = new Date().toISOString().replace("T", " ").replace("Z", "");
+    let spn
+    if (data.ATY_BAR_NO.substr(0,3) !== 'BND')
+    {
+      spn = 'ATY_' + data.ATY_BAR_NO.trim()
+    }
+    else
+    {
+      spn = data.ATY_BAR_NO.trim()
+    }
 
     const response:STAGING.DCT_ADDRESSESS_STAGING = {
-      SPN: `'ATY_${data.ATY_BAR_NO.trim()}'`,
+      SPN: `'${spn}'`,
       ADDRESSTYP: `'WORK'`,
       PostedDate: `'${timestamp}'`,
       CurrentAddressFlag: `'Y'`,
@@ -55,6 +63,7 @@ export default class AddressHandler extends DestinationHandler {
       Addressline1: `'${data.ATY_ADDRESS1.replace(/'/g, "''").trim()}'`,
       Addressline2: `'${data.ATY_ADDRESS2.replace(/'/g, "''").trim()}'`,
       state: `'${CSZ.state.replace(/'/g, "''")}'`,
+      //state: "'" + CSZ.state.replace(/'/g, "''") + "'",
       city: `'${CSZ.city.replace(/'/g, "''")}'`,
       postalCD: `'${CSZ.zip.length > 10 ? CSZ.zip.replace("-", "").replace(/'/g, "''") : CSZ.zip.replace(/'/g, "''")}'`,
       RestrictedAddressFlag: `'N'`,

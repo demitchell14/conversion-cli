@@ -12,8 +12,23 @@ Node CLI Conversion tool used to convert database data
 * [Usage](#usage)
 * [Commands](#commands)
 <!-- tocstop -->
+* [Usage](#usage)
+* [Commands](#commands)
+<!-- tocstop -->
 # Usage
 <!-- usage -->
+```sh-session
+$ npm install -g conversion-cli
+$ cli COMMAND
+running command...
+$ cli (-v|--version|version)
+conversion-cli/0.0.0 win32-x64 node-v10.14.1
+$ cli --help [COMMAND]
+USAGE
+  $ cli COMMAND
+...
+```
+<!-- usagestop -->
 ```sh-session
 $ npm install -g conversion-cli
 $ cli COMMAND
@@ -28,6 +43,123 @@ USAGE
 <!-- usagestop -->
 # Commands
 <!-- commands -->
+* [`cli convert SOURCE DESTINATION`](#cli-convert-source-destination)
+* [`cli hello [FILE]`](#cli-hello-file)
+* [`cli help [COMMAND]`](#cli-help-command)
+* [`cli parse-csv SOURCE DESTINATION`](#cli-parse-csv-source-destination)
+* [`cli parse-csv.back SOURCE DESTINATION`](#cli-parse-csvback-source-destination)
+
+## `cli convert SOURCE DESTINATION`
+
+Convert command is currently used to convert CUC Database data.
+
+```
+USAGE
+  $ cli convert SOURCE DESTINATION
+
+ARGUMENTS
+  SOURCE       (idm2|idm3|idap|atyp|retrieve) The handler identifier that is used to aggregate data to be converted.
+               Each supplies a unique action
+
+  DESTINATION  (names|address|atyp-address|atyp-names) The handler identifier that is used to tell the program how to
+               convert
+
+OPTIONS
+  -E, --errors=errors          File name to output errors to. Leave blank to not receive error logs
+  -L, --logs=logs              File name to output conversion information to. Leave blank to not receive conversion logs
+  -S, --statements=statements  File name to output query statements to. Leave blank to not receive statement logs
+  -h, --help                   show CLI help
+  -k, --key=key                This is required in order to offset / limit in SQLExpress. It is the ORDER BY [Key]
+  -l, --limit=limit            Number to indicate how many records to import at a time
+  -o, --offset=offset          Number to Indicate the start point where to begin importing from
+  -s, --selector=selector      String indicating field names to select delimited by a single comma in between
+
+EXAMPLE
+  $ cli convert [from] [to] [handler]
+       hello world from ./src/hello.ts!
+```
+
+_See code: [src\commands\convert.ts](https://github.com/demitchell14/conversion-cli/blob/v0.0.0/src\commands\convert.ts)_
+
+## `cli hello [FILE]`
+
+describe the command here
+
+```
+USAGE
+  $ cli hello [FILE]
+
+OPTIONS
+  -f, --force
+  -h, --help       show CLI help
+  -n, --name=name  name to print
+
+EXAMPLE
+  $ cli hello
+  hello world from ./src/hello.ts!
+```
+
+_See code: [src\commands\hello.ts](https://github.com/demitchell14/conversion-cli/blob/v0.0.0/src\commands\hello.ts)_
+
+## `cli help [COMMAND]`
+
+display help for cli
+
+```
+USAGE
+  $ cli help [COMMAND]
+
+ARGUMENTS
+  COMMAND  command to show help for
+
+OPTIONS
+  --all  see all commands in CLI
+```
+
+_See code: [@oclif/plugin-help](https://github.com/oclif/plugin-help/blob/v2.1.6/src\commands\help.ts)_
+
+## `cli parse-csv SOURCE DESTINATION`
+
+describe the command here
+
+```
+USAGE
+  $ cli parse-csv SOURCE DESTINATION
+
+ARGUMENTS
+  SOURCE       The relative, or absolute location of a CSV that needs to be converted
+  DESTINATION  The relative, or absolute location to generate the file
+
+OPTIONS
+  -h, --help  show CLI help
+
+EXAMPLE
+  $ run parse-csv <source file> <destination file>
+```
+
+_See code: [src\commands\parse-csv.ts](https://github.com/demitchell14/conversion-cli/blob/v0.0.0/src\commands\parse-csv.ts)_
+
+## `cli parse-csv.back SOURCE DESTINATION`
+
+describe the command here
+
+```
+USAGE
+  $ cli parse-csv.back SOURCE DESTINATION
+
+ARGUMENTS
+  SOURCE       The relative, or absolute location of a CSV that needs to be converted
+  DESTINATION  The relative, or absolute location to generate the file
+
+OPTIONS
+  -h, --help  show CLI help
+
+EXAMPLE
+  $ run parse-csv <source file> <destination file>
+```
+
+_See code: [src\commands\parse-csv.back.ts](https://github.com/demitchell14/conversion-cli/blob/v0.0.0/src\commands\parse-csv.back.ts)_
+<!-- commandsstop -->
 * [`cli convert SOURCE DESTINATION`](#cli-convert-source-destination)
 * [`cli hello [FILE]`](#cli-hello-file)
 * [`cli help [COMMAND]`](#cli-help-command)

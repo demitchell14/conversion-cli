@@ -12,10 +12,10 @@ export default class NamesHandler extends DestinationHandler {
 
   constructor(props: AddressHandlerProps) {
     super(props);
-    this.table = "dbo.DCT_Persons_Staging" // props.table;
+    this.table = "dbo.DCT_Person_Aliases_Staging" // props.table;
   }
 
-  import = (data: STAGING.DCT_PERSONS_STAGING[]) => {
+  import = (data: STAGING.DCT_PERSON_ALIASES_STAGING[]) => {
     if (data.length > 0) {
       let query = `INSERT INTO ${this.table} (${Object.keys(data[0]).map(k => k).join(",")}) VALUES `
       query += data.map(data => `(${Object.values(data).map(k => k).join(",")})`).join(",")
@@ -35,20 +35,13 @@ export default class NamesHandler extends DestinationHandler {
     const timestamp = new Date().toISOString().replace("T", " ").replace("Z", "");
 
     const response = {
-      spn: `'${data.IDA_IDM_NO}'`,
-      firstname: `'${name.first}'`,
-      middlename: `'${name.middle}'`,
-      lastname: `'${name.last}'`,
-      displayname: `'${data.IDA_ALIAS.replace(/\s+/g, " ").replace(/'/g, "''")}'`,
-      sealedflag: `'N'`,
-      corp: `'N'`,
-      is_attorney: `'N'`,
-      suffix_name: `'${name.suffix}'`,
-      comment_text: `'From NETD'`,
-      date_time_created: `'${timestamp}'`,
-      date_time_modified: `'${timestamp}'`,
-      user_id: `'bwilder'`,
-    } as STAGING.DCT_PERSONS_STAGING;
+      spn: `'${data.IDA_IDM_NO.trim()}'`,
+      first_name: `'${name.first}'`,
+      middle_name: `'${name.middle}'`,
+      last_name: `'${name.last}'`,
+      display_name: `'${data.IDA_ALIAS.trim().replace(/'/g, "''")}'`,
+      suffix_name:  `'${name.suffix}'`,
+    } as STAGING.DCT_PERSON_ALIASES_STAGING;
 
     return response;
   }

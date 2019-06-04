@@ -1,7 +1,7 @@
 import {SqlClient} from 'msnodesqlv8'
 import {DT, IIDMRowData, IRowData, STAGING} from '../../../../tables'
 import {DestinationHandler} from '../../destinationHandler'
-import {splitCSZ} from '../../functions'
+import {removeRelationshipFromAddresses, splitCSZ} from '../../functions'
 import {AddressHandlerProps} from '../address'
 
 const sql: SqlClient = require('msnodesqlv8');
@@ -30,6 +30,7 @@ export default class AddressHandler extends DestinationHandler {
       // return new Promise(resolve => resolve({ response: query, data }));
       query
       const response = this.query(query);
+      response.catch(err => console.log(err));
       return new Promise((resolve, reject) => {
         response.then(res => resolve({response: res, data}));
         response.catch(err => reject(err));
@@ -42,18 +43,22 @@ export default class AddressHandler extends DestinationHandler {
 
   convert = (data: DT.ATYP | any) => {
 
-    const CSZ = splitCSZ(data.ATY_CITY_ST_ZIP);
+    const CSZ = splitCSZ(data.IDM_ADDRESS_CITY);
+    if (data.IDM_ADDRESS_STATE.trim() !== '')
+    {CSZ.state = data.IDM_ADDRESS_STATE}
+ //   if (data.IDM_ZIP_FIRST_5.trim() !== '')
+ //   {CSZ.zip = data.IDM_ZIP_FIRST_5 + '-' + data.IDM_ZIP_LAST_4}
 
     const timestamp = new Date().toISOString().replace("T", " ").replace("Z", "");
 
     const response:STAGING.DCT_ADDRESSESS_STAGING = {
-      SPN: `'ATY_${data.ATY_BAR_NO.trim()}'`,
+      SPN: `'${data.IDM_IDM_NO.trim()}'`,
       ADDRESSTYP: `'WORK'`,
       PostedDate: `'${timestamp}'`,
       CurrentAddressFlag: `'Y'`,
       BadAddressFlag: `'N'`,
-      Addressline1: `'${data.ATY_ADDRESS1.replace(/'/g, "''").trim()}'`,
-      Addressline2: `'${data.ATY_ADDRESS2.replace(/'/g, "''").trim()}'`,
+      Addressline1: `'${removeRelationshipFromAddresses(data.IDM_ADDRESS1.replace(/'/g, "''").trim())}'`,
+      Addressline2: `'${removeRelationshipFromAddresses(data.IDM_ADDRESS2.replace(/'/g, "''").trim())}'`,
       state: `'${CSZ.state.replace(/'/g, "''")}'`,
       city: `'${CSZ.city.replace(/'/g, "''")}'`,
       postalCD: `'${CSZ.zip.length > 10 ? CSZ.zip.replace("-", "").replace(/'/g, "''") : CSZ.zip.replace(/'/g, "''")}'`,
@@ -66,6 +71,7 @@ export default class AddressHandler extends DestinationHandler {
       user_id: `'bwilder'`,
     };
 
+    response;
     return response;
   }
 

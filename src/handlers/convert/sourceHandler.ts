@@ -27,20 +27,21 @@ export class SourceHandler {
   }
 
   statements = {
-    idm2: (offset:number) => `SELECT * FROM id.IDMP ORDER BY IDM_IDM_NO OFFSET ${offset} ROWS FETCH NEXT ${this.limit} ROWS ONLY;`,
+    idmAll: (offset:number) => `SELECT * FROM id.IDMP ORDER BY IDM_IDM_NO OFFSET ${offset} ROWS FETCH NEXT ${this.limit} ROWS ONLY;`,
 
-    idm3: (offset:number) => `SELECT * FROM id.IDMP
+    idmAddr: (offset:number) => `SELECT * FROM id.IDMP
     where (idm_address1 <> '' or idm_address2 <> '' 
     or idm_address_city <> '' or idm_zip_first_5 <> '')  
     and IDM_IDM_NO <> '        1'  
+    order by idm_idm_no
     OFFSET ${offset} ROWS FETCH NEXT ${this.limit} ROWS ONLY;`,
 
-    idap: (offset:number) => `SELECT * FROM id.IDAP
-    join id.iamp on ida_idm_no = idm_idm_no where ida_idm_no <> '' and ida_alias <> ''
+    idaAll: (offset:number) => `SELECT * FROM id.IDAP
+    join id.idmp on ida_idm_no = idm_idm_no where ida_idm_no <> '' and ida_alias <> ''
     and ida_seq <> 0 order by ida_idm_no, ida_alias   
-    ORDER BY IDA_IDM_NO OFFSET ${offset} ROWS FETCH NEXT ${this.limit} ROWS ONLY;`,
+    OFFSET ${offset} ROWS FETCH NEXT ${this.limit} ROWS ONLY;`,
 
-    atyp: (offset:number) => `SELECT * FROM dt.atyp WHERE SUBSTRING(aty_bar_no,1,3) <> 'BND' AND aty_bar_no <> '       1' 
+    atyAll: (offset:number) => `SELECT * FROM dt.atyp WHERE aty_bar_no <> '       1' 
     ORDER BY ATY_BAR_NO OFFSET ${offset} ROWS FETCH NEXT ${this.limit} ROWS ONLY;`,
 
     removeDupIDA: (offset:number) => `with tempida (duplicateRecCount, ida_idm_no, ida_alias) as (
@@ -55,9 +56,63 @@ export class SourceHandler {
     idl_idm_no, concat(idl_dl_number_key, idl_dl_number_rest) as duplicates from id.idlp)
     delete from tempidl WHERE duplicateRecCount > 1;`,
 
+    idm2DL: (offset:number) =>`insert into DCT_Person_DriversLicenses_Staging
+    (spn, license_num, license_class_code, license_state, license_expiration_date, 
+    date_time_created, date_time_modified, user_id) 
+    select trim(idl_idm_no), concat(idl_dl_number_key, idl_dl_number_rest), idl_dl_type, idl_dl_state,
+    case 
+    when isdate(concat(idl_dl_expire_cc, idl_dl_expire_yy, '-', idl_dl_expire_mm, '-', idl_dl_expire_dd)) = 1
+        then cast(concat(idl_dl_expire_cc, idl_dl_expire_yy, '-', idl_dl_expire_mm, '-', idl_dl_expire_dd) as date)
+    end as license_expiration_date, 
+    CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 'bwilder'
+    from id.idlp 
+    join id.idmp on trim(idl_idm_no) = trim(IDM_IDM_NO)
+    where concat(idl_dl_number_key, idl_dl_number_rest) <> '';`,
+
+    idm2PhoneMain: (offset:number) =>`
+    insert into dct_phones_staging
+    (spn, BASEPHONENUM, CURRENTPHONEFLAG, PHONETYP, ProcessedFlag,
+    PHONESEQ, DATE_TIME_CREATED, DATE_TIME_MODIFIED, user_id )
+    select trim(idm_idm_no), 
+    concat(IDM_PHONE1, '-', IDM_PHONE2, '-', IDM_PHONE3),
+    'Y', 'MAIN', 'Y', 0, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 'bwilder'
+    from id.idmp where IDM_PHONE2 <> '' or  IDM_PHONE3 <> '';
+    `,
+
+    idm2PhoneCell: (offset:number) =>`
+    insert into dct_phones_staging
+    (spn, BASEPHONENUM, CURRENTPHONEFLAG, PHONETYP, ProcessedFlag,
+    PHONESEQ, DATE_TIME_CREATED, DATE_TIME_MODIFIED, user_id )
+    select trim(idm_idm_no), 
+    concat(IDM_CELL1, '-', IDM_CELL2, '-', IDM_CELL3),
+    'Y', 'CELL', 'Y', 0, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 'bwilder'
+    from id.idmp where IDM_CELL2 <> '' or  IDM_CELL3 <> '';
+    `,
+
+    idm2PhoneFax: (offset:number) =>`
+    insert into dct_phones_staging
+    (spn, BASEPHONENUM, CURRENTPHONEFLAG, PHONETYP, ProcessedFlag,
+    PHONESEQ, DATE_TIME_CREATED, DATE_TIME_MODIFIED, user_id )
+    select trim(idm_idm_no), 
+    concat(IDM_FAX1, '-', IDM_FAX2, '-', IDM_FAX3),
+    'Y', 'FAX', 'Y', 0, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 'bwilder'
+    from id.idmp where IDM_FAX2 <> '' or  IDM_FAX3 <> '';
+    `,
+
+    idv2Vehicle: (offset:number) =>`
+    insert into DCT_Persons_VehicleInfo_Staging (
+    spn, VEHICLE_MODEL_YEAR, VEHICLE_MAKE_TYPE_CODE, VEHICLE_MODEL_TYPE_CODE,
+    LICENSE_PLATE_NUM, STATE_CODE, VEHICLE_COLOR, DATE_TIME_CREATED,
+    DATE_TIME_MODIFIED, USER_ID)
+    select trim(idv_idm_no), concat(idv_year_cc, idv_year_yy),
+    left(idv_make,8), left(idv_model,8), idv_license, idv_license_state,
+    idv_color, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 'bwilder'
+    from id.idvp join id.idmp on IDV_IDM_NO = IDM_IDM_NO;
+    `,
+
     idm2demogr: (offset:number) =>`insert into dbo.DCT_Person_Demographics_History (
     SPN, DOB, Height, weight, sex, ETHINICITYTYPCD, eyecolor, haircolor, race_cd) select 
-    idm_idm_no, 
+    trim(idm_idm_no), 
     case 
     when isdate(concat(idm_dob_yy, '-', idm_dob_mm, '-', idm_dob_dd)) = 1
         then cast(concat(idm_dob_yy, '-', idm_dob_mm, '-', idm_dob_dd) as date)
@@ -67,6 +122,7 @@ export class SourceHandler {
     where idm_dob_yy <> '' or idm_dob_mm <> '' or idm_dob_dd <> ''
     or idm_height_ft > 0 or idm_height_in > 0 or idm_weight > 0 or idm_sex <> ''
     or idm_ethnic <> '' or idm_eyes <> '' or idm_hair <> '' or idm_race <> '';`,
+
   }
 
   async *execute(offset = this.offset): AsyncIterableIterator<Array<Partial<any>>> {

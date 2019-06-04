@@ -100,6 +100,13 @@ export function splitCSZ(data:string) {
     }
   }
 
+  // if (typeof ret.zip === "string" && ret.zip.match(/^\D+$/g)) {
+  //   if (ret.city === "") {
+  //     ret.city = ret.zip;
+  //     delete ret.zip;
+  //   }
+  // }
+
   if (!ret.state)
     ret.state = "";
   if (!ret.city)
@@ -107,5 +114,39 @@ export function splitCSZ(data:string) {
   if (!ret.zip)
     ret.zip = "";
 
+  // removeWhatever("asdfas", /af/);
+
+  ret.zip = ret.zip.substr(0, 10);
+  // ret.city = ret.city
+  // ret.state = ret.state.substr(0, 2);
   return ret;
+}
+
+export function removeRelationshipFromAddresses(data: string) {
+  const relationships = [
+    "PARENT",
+    "PAR:",
+    "FATHER",
+    "MOTHER",
+    "CHILD",
+    "GRANDMOTHER",
+    "GRANDFATHER",
+    "GRANDPARENT",
+    "GUARDIAN",
+  ]
+
+  function shouldRemove(toSearch:string, regex:string|RegExp) {
+    if (typeof regex === "string") {
+      return toSearch.indexOf(regex) >= 0;// ? "" : toSearch;
+    } else {
+      return toSearch.match(regex);// ? "" : toSearch;
+    }
+  }
+
+  relationships.map(rel => {
+    if (data === "") return;
+    if (shouldRemove(data, rel))
+      data = "";
+  })
+  return data;
 }
