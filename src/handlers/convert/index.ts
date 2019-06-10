@@ -32,6 +32,12 @@ export const SourceHandlers = {
   idm2PhoneCell: "./source/retrieve",
   idm2PhoneFax: "./source/retrieve",
   idv2Vehicle: "./source/retrieve",
+  aty2email: "./source/retrieve",
+  aty2phoneMain: "./source/retrieve",
+  aty2phoneFax: "./source/retrieve",
+  aty2phoneCel: "./source/retrieve",
+  aty2phoneBep: "./source/retrieve",
+  aty2phonePag: "./source/retrieve",
   retrieve: "./source/retrieve",
 }
 

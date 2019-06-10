@@ -123,6 +123,66 @@ export class SourceHandler {
     or idm_height_ft > 0 or idm_height_in > 0 or idm_weight > 0 or idm_sex <> ''
     or idm_ethnic <> '' or idm_eyes <> '' or idm_hair <> '' or idm_race <> '';`,
 
+    aty2email: (offset:number) =>`
+    insert into DCT_Person_Email_Staging
+    (SPN, EMAIL_ADDRESS, CURRENT_FLAG, EMAIL_TYP, DATE_TIME_CREATED, DATE_TIME_MODIFIED, USER_ID)
+    select case when SUBSTRING(aty_bar_no,1,3) <> 'BND' then concat('ATY_', trim(aty_bar_no))
+    else trim(aty_bar_no) end as SPN,
+    aty_email_address, 
+    case when aty_inactive_sw = 'Y' then 'N' else 'Y' end as Current_Flag,
+    'email' as email_typ, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP,
+    'bwilder' as user_id from dt.atyp where ATY_EMAIL_ADDRESS <> '';`,
+
+    aty2phoneMain: (offset:number) =>`
+    insert into dct_phones_staging
+    (spn, BASEPHONENUM, CURRENTPHONEFLAG, PHONETYP, ProcessedFlag, PHONESEQ, DATE_TIME_CREATED, DATE_TIME_MODIFIED,user_id )
+    select case when SUBSTRING(aty_bar_no,1,3) <> 'BND' then concat('ATY_', trim(aty_bar_no))
+    else trim(aty_bar_no) end as SPN,
+    concat(ATY_PHONE1, '-', ATY_PHONE2, '-', ATY_PHONE3), 
+    'Y', 'MAIN', 'Y', 0, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 'bwilder' 
+    from dt.atyp where trim(ATY_BAR_NO) <> '1' and (ATY_PHONE2 <> '' or  ATY_PHONE3 <> '');
+    `,
+
+    aty2phoneFax: (offset:number) =>`
+    insert into dct_phones_staging
+    (spn, BASEPHONENUM, CURRENTPHONEFLAG, PHONETYP, ProcessedFlag, PHONESEQ, DATE_TIME_CREATED, DATE_TIME_MODIFIED,user_id )
+    select case when SUBSTRING(aty_bar_no,1,3) <> 'BND' then concat('ATY_', trim(aty_bar_no))
+    else trim(aty_bar_no) end as SPN,
+    concat(ATY_FAX_PHONE1, '-', ATY_FAX_PHONE2, '-', ATY_FAX_PHONE3), 
+    'Y', 'FAX', 'Y', 0, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 'bwilder'
+    from dt.atyp where trim(ATY_BAR_NO) <> '1' and (ATY_FAX_PHONE2 <> '' or  ATY_FAX_PHONE3 <> '');    
+    `,
+
+    aty2phoneCel: (offset:number) => `
+    insert into dct_phones_staging
+    (spn, BASEPHONENUM, CURRENTPHONEFLAG, PHONETYP, ProcessedFlag, PHONESEQ, DATE_TIME_CREATED, DATE_TIME_MODIFIED,user_id )
+    select case when SUBSTRING(aty_bar_no,1,3) <> 'BND' then concat('ATY_', trim(aty_bar_no))
+    else trim(aty_bar_no) end as SPN,
+    concat(ATY_CEL_PHONE1, '-', ATY_CEL_PHONE2, '-', ATY_CEL_PHONE3),
+    'Y', 'CELL', 'Y', 0, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 'bwilder'
+    from dt.atyp where trim(ATY_BAR_NO) <> '1' and (ATY_CEL_PHONE2 <> '' or  ATY_CEL_PHONE3 <> '');    
+    `,
+
+    aty2phoneBep: (offset:number) => `
+    insert into dct_phones_staging
+    (spn, BASEPHONENUM, CURRENTPHONEFLAG, PHONETYP, ProcessedFlag, PHONESEQ, DATE_TIME_CREATED, DATE_TIME_MODIFIED,user_id )
+    select case when SUBSTRING(aty_bar_no,1,3) <> 'BND' then concat('ATY_', trim(aty_bar_no))
+    else trim(aty_bar_no) end as SPN,
+    concat(ATY_BEP_PHONE1, '-', ATY_BEP_PHONE2, '-', ATY_BEP_PHONE3),
+    'Y', 'PAG', 'Y', 0, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 'bwilder'
+    from dt.atyp where trim(ATY_BAR_NO) <> '1' and (ATY_BEP_PHONE2 <> '' or  ATY_BEP_PHONE3 <> '');
+    `,
+
+    aty2phonePag: (offset:number) => `
+    insert into dct_phones_staging
+    (spn, BASEPHONENUM, CURRENTPHONEFLAG, PHONETYP, ProcessedFlag, PHONESEQ, DATE_TIME_CREATED, DATE_TIME_MODIFIED,user_id )
+    select case when SUBSTRING(aty_bar_no,1,3) <> 'BND' then concat('ATY_', trim(aty_bar_no))
+    else trim(aty_bar_no) end as SPN,
+    concat(ATY_PAG_PHONE1, '-', ATY_PAG_PHONE2, '-', ATY_PAG_PHONE3),
+    'Y', 'PAG', 'Y', 0, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 'bwilder'
+    from dt.atyp where trim(ATY_BAR_NO) <> '1' and (ATY_PAG_PHONE2 <> '' or  ATY_PAG_PHONE3 <> '');    
+    `,
+
   }
 
   async *execute(offset = this.offset): AsyncIterableIterator<Array<Partial<any>>> {

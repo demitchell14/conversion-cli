@@ -54,7 +54,7 @@ export function splitCSZ(data:string) {
       ret.state = spl[1].trim();
       ret.zip = spl[2].trim();
     } else {
-      ret.state = spl[1].substr(0, spl[1].lastIndexOf(" ")).trim();;
+      ret.state = spl[1].substr(0, spl[1].lastIndexOf(" ")).trim();
       ret.zip = spl[1].substr(spl[1].lastIndexOf(" ")).trim();
     }
   } else {
