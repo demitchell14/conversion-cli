@@ -2,10 +2,9 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="f82c54f7-5b57-4545-b55b-8f72e8a2449b" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/.env" beforeDir="false" afterPath="$PROJECT_DIR$/.env" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/oclif.manifest.json" beforeDir="false" afterPath="$PROJECT_DIR$/oclif.manifest.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/handlers/convert/index.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/handlers/convert/index.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/handlers/convert/sourceHandler.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/handlers/convert/sourceHandler.ts" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -53,7 +52,7 @@
     <favorites_list name="conversion-cli" />
   </component>
   <component name="FileEditorManager">
-    <splitter split-orientation="horizontal" split-proportion="0.49205202">
+    <splitter split-orientation="horizontal" split-proportion="0.2731214">
       <split-first>
         <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
           <file pinned="false" current-in-tab="false">
@@ -68,47 +67,11 @@
               </provider>
             </entry>
           </file>
-          <file pinned="false" current-in-tab="true">
+          <file pinned="false" current-in-tab="false">
             <entry file="file://$PROJECT_DIR$/src/handlers/convert/destination/clt/address.ts">
               <provider selected="true" editor-type-id="text-editor">
                 <state relative-caret-position="334">
                   <caret line="49" column="24" selection-start-line="49" selection-start-column="24" selection-end-line="49" selection-end-column="24" />
-                </state>
-              </provider>
-            </entry>
-          </file>
-          <file pinned="false" current-in-tab="false">
-            <entry file="file://$PROJECT_DIR$/src/tables.d.ts">
-              <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="320">
-                  <caret line="165" column="25" selection-start-line="165" selection-start-column="25" selection-end-line="165" selection-end-column="25" />
-                  <folding>
-                    <element signature="n#!!block;n#ATYP#0;n#DT#0" />
-                  </folding>
-                </state>
-              </provider>
-            </entry>
-          </file>
-          <file pinned="false" current-in-tab="false">
-            <entry file="file://$PROJECT_DIR$/src/handlers/convert/destination/address.ts">
-              <provider selected="true" editor-type-id="text-editor">
-                <state>
-                  <caret selection-end-line="57" />
-                  <folding>
-                    <element signature="e#0#38#0" expanded="true" />
-                  </folding>
-                </state>
-              </provider>
-            </entry>
-          </file>
-          <file pinned="false" current-in-tab="false">
-            <entry file="file://$PROJECT_DIR$/src/handlers/convert/destination/clt/persons.ts">
-              <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="340">
-                  <caret line="38" selection-start-line="37" selection-end-line="38" />
-                  <folding>
-                    <element signature="e#0#37#0" expanded="true" />
-                  </folding>
                 </state>
               </provider>
             </entry>
@@ -128,17 +91,20 @@
           <file pinned="false" current-in-tab="false">
             <entry file="file://$PROJECT_DIR$/.env">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="17">
-                  <caret line="1" column="23" selection-start-line="1" selection-start-column="10" selection-end-line="1" selection-end-column="25" />
+                <state relative-caret-position="85">
+                  <caret line="5" column="20" selection-start-line="5" selection-start-column="20" selection-end-line="5" selection-end-column="20" />
                 </state>
               </provider>
             </entry>
           </file>
-          <file pinned="false" current-in-tab="false">
-            <entry file="file://$PROJECT_DIR$/src/handlers/convert/destination/aty/address.ts">
+          <file pinned="false" current-in-tab="true">
+            <entry file="file://$PROJECT_DIR$/src/handlers/convert/destination/clt/persons.ts">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="132">
-                  <caret line="41" selection-end-line="83" />
+                <state relative-caret-position="340">
+                  <caret line="38" selection-start-line="37" selection-end-line="38" />
+                  <folding>
+                    <element signature="e#0#37#0" expanded="true" />
+                  </folding>
                 </state>
               </provider>
             </entry>
@@ -152,8 +118,17 @@
               <file pinned="false" current-in-tab="false">
                 <entry file="file://$PROJECT_DIR$/package.json">
                   <provider selected="true" editor-type-id="text-editor">
-                    <state relative-caret-position="192">
+                    <state relative-caret-position="1274">
                       <caret line="82" column="69" selection-start-line="82" selection-start-column="69" selection-end-line="82" selection-end-column="69" />
+                    </state>
+                  </provider>
+                </entry>
+              </file>
+              <file pinned="false" current-in-tab="false">
+                <entry file="file://$PROJECT_DIR$/.gitignore">
+                  <provider selected="true" editor-type-id="text-editor">
+                    <state relative-caret-position="136">
+                      <caret line="8" column="4" lean-forward="true" selection-start-line="8" selection-start-column="4" selection-end-line="8" selection-end-column="4" />
                     </state>
                   </provider>
                 </entry>
@@ -161,8 +136,8 @@
               <file pinned="false" current-in-tab="true">
                 <entry file="file://$PROJECT_DIR$/src/handlers/convert/sourceHandler.ts">
                   <provider selected="true" editor-type-id="text-editor">
-                    <state relative-caret-position="162">
-                      <caret line="70" column="17" selection-start-line="70" selection-start-column="4" selection-end-line="70" selection-end-column="17" />
+                    <state relative-caret-position="236">
+                      <caret line="224" column="47" selection-start-line="224" selection-start-column="47" selection-end-line="224" selection-end-column="47" />
                       <folding>
                         <element signature="e#0#38#0" expanded="true" />
                       </folding>
@@ -177,8 +152,8 @@
               <file pinned="false" current-in-tab="true">
                 <entry file="file://$PROJECT_DIR$/src/handlers/convert/index.ts">
                   <provider selected="true" editor-type-id="text-editor">
-                    <state relative-caret-position="61">
-                      <caret line="45" column="36" selection-start-line="45" selection-start-column="36" selection-end-line="45" selection-end-column="36" />
+                    <state relative-caret-position="129">
+                      <caret line="49" column="32" lean-forward="true" selection-start-line="49" selection-start-column="32" selection-end-line="49" selection-end-column="32" />
                       <folding>
                         <element signature="e#0#46#0" expanded="true" />
                       </folding>
@@ -196,6 +171,7 @@
     <findStrings>
       <find>NamesHandler</find>
       <find>split</find>
+      <find>trim(</find>
     </findStrings>
     <replaceStrings>
       <replace>AddressHandler</replace>
@@ -224,7 +200,6 @@
         <option value="$PROJECT_DIR$/src/handlers/alias.ts" />
         <option value="$PROJECT_DIR$/src/ImportHandler.ts" />
         <option value="$PROJECT_DIR$/src/handlers/names.ts" />
-        <option value="$PROJECT_DIR$/.env" />
         <option value="$PROJECT_DIR$/src/handlers/convert/destination/names.ts" />
         <option value="$PROJECT_DIR$/src/commands/convert.ts" />
         <option value="$PROJECT_DIR$/src/handlers/convert/source/retrieve.ts" />
@@ -241,8 +216,10 @@
         <option value="$PROJECT_DIR$/src/handlers/convert/destination/clt/persons.ts" />
         <option value="$PROJECT_DIR$/src/tables.d.ts" />
         <option value="$PROJECT_DIR$/src/handlers/convert/destination/clt/address.ts" />
-        <option value="$PROJECT_DIR$/src/handlers/convert/sourceHandler.ts" />
         <option value="$PROJECT_DIR$/src/handlers/convert/index.ts" />
+        <option value="$PROJECT_DIR$/.gitignore" />
+        <option value="$PROJECT_DIR$/.env" />
+        <option value="$PROJECT_DIR$/src/handlers/convert/sourceHandler.ts" />
       </list>
     </option>
   </component>
@@ -451,7 +428,7 @@
       <workItem from="1558979720001" duration="9397000" />
       <workItem from="1559311303233" duration="41399000" />
       <workItem from="1560783306189" duration="3544000" />
-      <workItem from="1561555660921" duration="20422000" />
+      <workItem from="1561555660921" duration="22447000" />
     </task>
     <task id="LOCAL-00001" summary=".">
       <created>1559341597119</created>
@@ -481,18 +458,26 @@
       <option name="project" value="LOCAL" />
       <updated>1561753099288</updated>
     </task>
-    <option name="localTasksCounter" value="5" />
+    <task id="LOCAL-00005" summary=".">
+      <created>1561758458779</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1561758458779</updated>
+    </task>
+    <option name="localTasksCounter" value="6" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="100497000" />
+    <option name="totallyTimeSpent" value="102522000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1936" height="1056" extended-state="6" />
+    <editor active="true" />
     <layout>
       <window_info id="Favorites" order="0" sideWeight="0.30208334" side_tool="true" weight="0.22862694" />
       <window_info id="npm" order="1" sideWeight="0.32749325" side_tool="true" visible="true" weight="0.119936034" />
-      <window_info content_ui="combo" id="Project" order="2" sideWeight="0.67250675" visible="true" weight="0.119936034" />
+      <window_info active="true" content_ui="combo" id="Project" order="2" sideWeight="0.67250675" visible="true" weight="0.119936034" />
       <window_info id="Structure" order="3" sideWeight="0.32416788" side_tool="true" weight="0.119936034" />
       <window_info anchor="bottom" id="Docker" order="0" show_stripe_button="false" />
       <window_info anchor="bottom" id="Command Line Tools Console" order="1" weight="0.32932165" />
@@ -503,7 +488,7 @@
       <window_info anchor="bottom" id="Message" order="6" />
       <window_info anchor="bottom" id="TypeScript" order="7" weight="0.32932165" />
       <window_info anchor="bottom" id="Find" order="8" weight="0.32936078" />
-      <window_info active="true" anchor="bottom" id="Run" order="9" visible="true" weight="0.19609967" />
+      <window_info anchor="bottom" id="Run" order="9" visible="true" weight="0.19609967" />
       <window_info anchor="bottom" id="Debug" order="10" weight="0.23726977" />
       <window_info anchor="bottom" id="Cvs" order="11" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="12" weight="0.4" />
@@ -782,13 +767,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/.env">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="17">
-          <caret line="1" column="23" selection-start-line="1" selection-start-column="10" selection-end-line="1" selection-end-column="25" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/handlers/convert/destination/ida/persons.ts">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="646">
@@ -840,46 +818,12 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/package.json">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="192">
-          <caret line="82" column="69" selection-start-line="82" selection-start-column="69" selection-end-line="82" selection-end-column="69" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/handlers/convert/destination/aty/address.ts">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="132">
-          <caret line="41" selection-end-line="83" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/handlers/convert/destination/aty/persons.ts">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="221">
           <caret line="34" column="26" selection-start-line="34" selection-start-column="17" selection-end-line="34" selection-end-column="26" />
           <folding>
             <element signature="e#0#47#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/handlers/convert/destination/address.ts">
-      <provider selected="true" editor-type-id="text-editor">
-        <state>
-          <caret selection-end-line="57" />
-          <folding>
-            <element signature="e#0#38#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/handlers/convert/destination/clt/persons.ts">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="340">
-          <caret line="38" selection-start-line="37" selection-end-line="38" />
-          <folding>
-            <element signature="e#0#37#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -894,6 +838,23 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/.gitignore">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="136">
+          <caret line="8" column="4" lean-forward="true" selection-start-line="8" selection-start-column="4" selection-end-line="8" selection-end-column="4" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/handlers/convert/destination/address.ts">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="85">
+          <caret line="5" lean-forward="true" selection-start-line="5" selection-end-line="5" />
+          <folding>
+            <element signature="e#0#38#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/src/handlers/convert/destination/clt/address.ts">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="334">
@@ -901,22 +862,53 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/handlers/convert/sourceHandler.ts">
+    <entry file="file://$PROJECT_DIR$/src/handlers/convert/destination/aty/address.ts">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="162">
-          <caret line="70" column="17" selection-start-line="70" selection-start-column="4" selection-end-line="70" selection-end-column="17" />
-          <folding>
-            <element signature="e#0#38#0" expanded="true" />
-          </folding>
+        <state relative-caret-position="132">
+          <caret line="41" selection-end-line="83" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/.env">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="85">
+          <caret line="5" column="20" selection-start-line="5" selection-start-column="20" selection-end-line="5" selection-end-column="20" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/handlers/convert/index.ts">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="61">
-          <caret line="45" column="36" selection-start-line="45" selection-start-column="36" selection-end-line="45" selection-end-column="36" />
+        <state relative-caret-position="129">
+          <caret line="49" column="32" lean-forward="true" selection-start-line="49" selection-start-column="32" selection-end-line="49" selection-end-column="32" />
           <folding>
             <element signature="e#0#46#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/handlers/convert/destination/clt/persons.ts">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="340">
+          <caret line="38" selection-start-line="37" selection-end-line="38" />
+          <folding>
+            <element signature="e#0#37#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/package.json">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1274">
+          <caret line="82" column="69" selection-start-line="82" selection-start-column="69" selection-end-line="82" selection-end-column="69" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/handlers/convert/sourceHandler.ts">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="236">
+          <caret line="224" column="47" selection-start-line="224" selection-start-column="47" selection-end-line="224" selection-end-column="47" />
+          <folding>
+            <element signature="e#0#38#0" expanded="true" />
           </folding>
         </state>
       </provider>

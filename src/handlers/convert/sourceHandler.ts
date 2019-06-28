@@ -39,13 +39,13 @@ export class SourceHandler {
     allCAAddrCLT: (offset:number) => `SELECT *, 'CA' as LOCATION FROM ca.CLTP
     where (clt_address1 <> '' or clt_address2 <> '' 
     or clt_city_st_zip <> '') and clt_number > '' and substring(clt_number,10,1) <> ' '
-    order by clt_number, clt_clt_seq_no
+    and clt_name <> 'EX PARTE' order by clt_number, clt_clt_seq_no
     OFFSET ${offset} ROWS FETCH NEXT ${this.limit} ROWS ONLY;`,
 
     allDTAddrCLT: (offset:number) => `SELECT *, 'DT' as LOCATION FROM dt.CLTP
     where (clt_address1 <> '' or clt_address2 <> '' 
     or clt_city_st_zip <> '') and clt_number > '' and substring(clt_number,10,1) <> ' '
-    order by clt_number, clt_clt_seq_no
+    and clt_name <> 'EX PARTE' order by clt_number, clt_clt_seq_no
     OFFSET ${offset} ROWS FETCH NEXT ${this.limit} ROWS ONLY;`,
 
     allDTNameCLT: (offset:number) => `
@@ -62,7 +62,7 @@ export class SourceHandler {
     insert into dct_phones_staging
     (spn, BASEPHONENUM, CURRENTPHONEFLAG, PHONETYP, ProcessedFlag,
     PHONESEQ, DATE_TIME_CREATED, DATE_TIME_MODIFIED, user_id) select 
-    concat('CA-', trim(clt_number), '-', clt_clt_seq_no), 
+    concat('CA-', ltrim(rtrim(clt_number)), '-', clt_clt_seq_no), 
     concat(CLT_PHONE1, '-', CLT_PHONE2, '-', CLT_PHONE3),
     'Y', 'MAIN', 'Y', 0, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 'bwilder'
     from ca.cltp where (CLT_PHONE2 <> '' or  CLT_PHONE3 <> '')
@@ -72,7 +72,7 @@ export class SourceHandler {
     insert into dct_phones_staging
     (spn, BASEPHONENUM, CURRENTPHONEFLAG, PHONETYP, ProcessedFlag,
     PHONESEQ, DATE_TIME_CREATED, DATE_TIME_MODIFIED, user_id) select 
-    concat('DT-', trim(clt_number), '-', clt_clt_seq_no), 
+    concat('DT-', ltrim(rtrim(clt_number)), '-', clt_clt_seq_no), 
     concat(CLT_PHONE1, '-', CLT_PHONE2, '-', CLT_PHONE3),
     'Y', 'MAIN', 'Y', 0, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 'bwilder'
     from dt.cltp where (CLT_PHONE2 <> '' or  CLT_PHONE3 <> '')
@@ -101,21 +101,21 @@ export class SourceHandler {
     idm2DL: (offset:number) =>`insert into DCT_Person_DriversLicenses_Staging
     (spn, license_num, license_class_code, license_state, license_expiration_date, 
     date_time_created, date_time_modified, user_id) 
-    select trim(idl_idm_no), concat(idl_dl_number_key, idl_dl_number_rest), idl_dl_type, idl_dl_state,
+    select ltrim(rtrim(idl_idm_no)), concat(idl_dl_number_key, idl_dl_number_rest), idl_dl_type, idl_dl_state,
     case 
     when isdate(concat(idl_dl_expire_cc, idl_dl_expire_yy, '-', idl_dl_expire_mm, '-', idl_dl_expire_dd)) = 1
         then cast(concat(idl_dl_expire_cc, idl_dl_expire_yy, '-', idl_dl_expire_mm, '-', idl_dl_expire_dd) as date)
     end as license_expiration_date, 
     CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 'bwilder'
     from id.idlp 
-    join id.idmp on trim(idl_idm_no) = trim(IDM_IDM_NO)
+    join id.idmp on ltrim(rtrim(idl_idm_no)) = ltrim(rtrim(IDM_IDM_NO))
     where concat(idl_dl_number_key, idl_dl_number_rest) <> '';`,
 
     idm2PhoneMain: (offset:number) =>`
     insert into dct_phones_staging
     (spn, BASEPHONENUM, CURRENTPHONEFLAG, PHONETYP, ProcessedFlag,
     PHONESEQ, DATE_TIME_CREATED, DATE_TIME_MODIFIED, user_id )
-    select trim(idm_idm_no), 
+    select ltrim(rtrim(idm_idm_no)), 
     concat(IDM_PHONE1, '-', IDM_PHONE2, '-', IDM_PHONE3),
     'Y', 'MAIN', 'Y', 0, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 'bwilder'
     from id.idmp where IDM_PHONE2 <> '' or  IDM_PHONE3 <> '';
@@ -125,7 +125,7 @@ export class SourceHandler {
     insert into dct_phones_staging
     (spn, BASEPHONENUM, CURRENTPHONEFLAG, PHONETYP, ProcessedFlag,
     PHONESEQ, DATE_TIME_CREATED, DATE_TIME_MODIFIED, user_id )
-    select trim(idm_idm_no), 
+    select ltrim(rtrim(idm_idm_no)), 
     concat(IDM_CELL1, '-', IDM_CELL2, '-', IDM_CELL3),
     'Y', 'CELL', 'Y', 0, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 'bwilder'
     from id.idmp where IDM_CELL2 <> '' or  IDM_CELL3 <> '';
@@ -135,7 +135,7 @@ export class SourceHandler {
     insert into dct_phones_staging
     (spn, BASEPHONENUM, CURRENTPHONEFLAG, PHONETYP, ProcessedFlag,
     PHONESEQ, DATE_TIME_CREATED, DATE_TIME_MODIFIED, user_id )
-    select trim(idm_idm_no), 
+    select ltrim(rtrim(idm_idm_no)), 
     concat(IDM_FAX1, '-', IDM_FAX2, '-', IDM_FAX3),
     'Y', 'FAX', 'Y', 0, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 'bwilder'
     from id.idmp where IDM_FAX2 <> '' or  IDM_FAX3 <> '';
@@ -146,7 +146,7 @@ export class SourceHandler {
     spn, VEHICLE_MODEL_YEAR, VEHICLE_MAKE_TYPE_CODE, VEHICLE_MODEL_TYPE_CODE,
     LICENSE_PLATE_NUM, STATE_CODE, VEHICLE_COLOR, DATE_TIME_CREATED,
     DATE_TIME_MODIFIED, USER_ID)
-    select trim(idv_idm_no), concat(idv_year_cc, idv_year_yy),
+    select ltrim(rtrim(idv_idm_no)), concat(idv_year_cc, idv_year_yy),
     left(idv_make,8), left(idv_model,8), idv_license, idv_license_state,
     idv_color, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 'bwilder'
     from id.idvp join id.idmp on IDV_IDM_NO = IDM_IDM_NO;
@@ -154,7 +154,7 @@ export class SourceHandler {
 
     idm2demogr: (offset:number) =>`insert into dbo.DCT_Person_Demographics_History (
     SPN, DOB, Height, weight, sex, ETHINICITYTYPCD, eyecolor, haircolor, race_cd) select 
-    trim(idm_idm_no), 
+    ltrim(rtrim(idm_idm_no)), 
     case 
     when isdate(concat(idm_dob_yy, '-', idm_dob_mm, '-', idm_dob_dd)) = 1
         then cast(concat(idm_dob_yy, '-', idm_dob_mm, '-', idm_dob_dd) as date)
@@ -168,8 +168,8 @@ export class SourceHandler {
     aty2email: (offset:number) =>`
     insert into DCT_Person_Email_Staging
     (SPN, EMAIL_ADDRESS, CURRENT_FLAG, EMAIL_TYP, DATE_TIME_CREATED, DATE_TIME_MODIFIED, USER_ID)
-    select case when SUBSTRING(aty_bar_no,1,3) <> 'BND' then concat('ATY_', trim(aty_bar_no))
-    else trim(aty_bar_no) end as SPN,
+    select case when SUBSTRING(aty_bar_no,1,3) <> 'BND' then concat('ATY_', ltrim(rtrim(aty_bar_no)))
+    else ltrim(rtrim(aty_bar_no)) end as SPN,
     aty_email_address, 
     case when aty_inactive_sw = 'Y' then 'N' else 'Y' end as Current_Flag,
     'email' as email_typ, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP,
@@ -178,51 +178,51 @@ export class SourceHandler {
     aty2phoneMain: (offset:number) =>`
     insert into dct_phones_staging
     (spn, BASEPHONENUM, CURRENTPHONEFLAG, PHONETYP, ProcessedFlag, PHONESEQ, DATE_TIME_CREATED, DATE_TIME_MODIFIED, user_id)
-    select case when SUBSTRING(aty_bar_no,1,3) <> 'BND' then concat('ATY_', trim(aty_bar_no))
-    else trim(aty_bar_no) end as SPN,
+    select case when SUBSTRING(aty_bar_no,1,3) <> 'BND' then concat('ATY_', ltrim(rtrim(aty_bar_no)))
+    else ltrim(rtrim(aty_bar_no)) end as SPN,
     concat(ATY_PHONE1, '-', ATY_PHONE2, '-', ATY_PHONE3), 
     'Y', 'MAIN', 'Y', 0, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 'bwilder' 
-    from dt.atyp where trim(ATY_BAR_NO) <> '1' and (ATY_PHONE2 <> '' or  ATY_PHONE3 <> '');
+    from dt.atyp where ltrim(rtrim(ATY_BAR_NO)) <> '1' and (ATY_PHONE2 <> '' or  ATY_PHONE3 <> '');
     `,
 
     aty2phoneFax: (offset:number) =>`
     insert into dct_phones_staging
     (spn, BASEPHONENUM, CURRENTPHONEFLAG, PHONETYP, ProcessedFlag, PHONESEQ, DATE_TIME_CREATED, DATE_TIME_MODIFIED, user_id)
-    select case when SUBSTRING(aty_bar_no,1,3) <> 'BND' then concat('ATY_', trim(aty_bar_no))
-    else trim(aty_bar_no) end as SPN,
+    select case when SUBSTRING(aty_bar_no,1,3) <> 'BND' then concat('ATY_', ltrim(rtrim(aty_bar_no)))
+    else ltrim(rtrim(aty_bar_no)) end as SPN,
     concat(ATY_FAX_PHONE1, '-', ATY_FAX_PHONE2, '-', ATY_FAX_PHONE3), 
     'Y', 'FAX', 'Y', 0, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 'bwilder'
-    from dt.atyp where trim(ATY_BAR_NO) <> '1' and (ATY_FAX_PHONE2 <> '' or  ATY_FAX_PHONE3 <> '');    
+    from dt.atyp where ltrim(rtrim(ATY_BAR_NO)) <> '1' and (ATY_FAX_PHONE2 <> '' or  ATY_FAX_PHONE3 <> '');    
     `,
 
     aty2phoneCel: (offset:number) => `
     insert into dct_phones_staging
     (spn, BASEPHONENUM, CURRENTPHONEFLAG, PHONETYP, ProcessedFlag, PHONESEQ, DATE_TIME_CREATED, DATE_TIME_MODIFIED, user_id)
-    select case when SUBSTRING(aty_bar_no,1,3) <> 'BND' then concat('ATY_', trim(aty_bar_no))
-    else trim(aty_bar_no) end as SPN,
+    select case when SUBSTRING(aty_bar_no,1,3) <> 'BND' then concat('ATY_', ltrim(rtrim(aty_bar_no)))
+    else ltrim(rtrim(aty_bar_no)) end as SPN,
     concat(ATY_CEL_PHONE1, '-', ATY_CEL_PHONE2, '-', ATY_CEL_PHONE3),
     'Y', 'CELL', 'Y', 0, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 'bwilder'
-    from dt.atyp where trim(ATY_BAR_NO) <> '1' and (ATY_CEL_PHONE2 <> '' or  ATY_CEL_PHONE3 <> '');    
+    from dt.atyp where ltrim(rtrim(ATY_BAR_NO)) <> '1' and (ATY_CEL_PHONE2 <> '' or  ATY_CEL_PHONE3 <> '');    
     `,
 
     aty2phoneBep: (offset:number) => `
     insert into dct_phones_staging
     (spn, BASEPHONENUM, CURRENTPHONEFLAG, PHONETYP, ProcessedFlag, PHONESEQ, DATE_TIME_CREATED, DATE_TIME_MODIFIED, user_id)
-    select case when SUBSTRING(aty_bar_no,1,3) <> 'BND' then concat('ATY_', trim(aty_bar_no))
-    else trim(aty_bar_no) end as SPN,
+    select case when SUBSTRING(aty_bar_no,1,3) <> 'BND' then concat('ATY_', ltrim(rtrim(aty_bar_no)))
+    else ltrim(rtrim(aty_bar_no)) end as SPN,
     concat(ATY_BEP_PHONE1, '-', ATY_BEP_PHONE2, '-', ATY_BEP_PHONE3),
     'Y', 'PAG', 'Y', 0, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 'bwilder'
-    from dt.atyp where trim(ATY_BAR_NO) <> '1' and (ATY_BEP_PHONE2 <> '' or  ATY_BEP_PHONE3 <> '');
+    from dt.atyp where ltrim(rtrim(ATY_BAR_NO)) <> '1' and (ATY_BEP_PHONE2 <> '' or  ATY_BEP_PHONE3 <> '');
     `,
 
     aty2phonePag: (offset:number) => `
     insert into dct_phones_staging
     (spn, BASEPHONENUM, CURRENTPHONEFLAG, PHONETYP, ProcessedFlag, PHONESEQ, DATE_TIME_CREATED, DATE_TIME_MODIFIED, user_id)
-    select case when SUBSTRING(aty_bar_no,1,3) <> 'BND' then concat('ATY_', trim(aty_bar_no))
-    else trim(aty_bar_no) end as SPN,
+    select case when SUBSTRING(aty_bar_no,1,3) <> 'BND' then concat('ATY_', ltrim(rtrim(aty_bar_no)))
+    else ltrim(rtrim(aty_bar_no)) end as SPN,
     concat(ATY_PAG_PHONE1, '-', ATY_PAG_PHONE2, '-', ATY_PAG_PHONE3),
     'Y', 'PAG', 'Y', 0, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 'bwilder'
-    from dt.atyp where trim(ATY_BAR_NO) <> '1' and (ATY_PAG_PHONE2 <> '' or  ATY_PAG_PHONE3 <> '');    
+    from dt.atyp where ltrim(rtrim(ATY_BAR_NO)) <> '1' and (ATY_PAG_PHONE2 <> '' or  ATY_PAG_PHONE3 <> '');    
     `,
 
     fixSuffix: (offset:number) => `
