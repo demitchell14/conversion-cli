@@ -23,6 +23,7 @@ export function splitName (data:string) {
       }
     }
   }
+  name.corp = data.indexOf(",") >= 0?"N":"Y"
 
   if (typeof name.last === "undefined")
     name.last = "";
@@ -41,6 +42,7 @@ type NameSplit = {
   last: string;
   middle: string;
   suffix: string;
+  corp: string;
 };
 
 

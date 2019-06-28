@@ -43,26 +43,29 @@ USAGE
 <!-- usagestop -->
 # Commands
 <!-- commands -->
-* [`cli convert SOURCE DESTINATION`](#cli-convert-source-destination)
+* [`cli convert SOURCE [DESTINATION]`](#cli-convert-source-destination)
 * [`cli hello [FILE]`](#cli-hello-file)
 * [`cli help [COMMAND]`](#cli-help-command)
 * [`cli parse-csv SOURCE DESTINATION`](#cli-parse-csv-source-destination)
 * [`cli parse-csv.back SOURCE DESTINATION`](#cli-parse-csvback-source-destination)
 
-## `cli convert SOURCE DESTINATION`
+## `cli convert SOURCE [DESTINATION]`
 
 Convert command is currently used to convert CUC Database data.
 
 ```
 USAGE
-  $ cli convert SOURCE DESTINATION
+  $ cli convert SOURCE [DESTINATION]
 
 ARGUMENTS
-  SOURCE       (idm2|idm3|idap|atyp|retrieve) The handler identifier that is used to aggregate data to be converted.
+  SOURCE       (idmAll|idmAddr|idaAll|atyAll|removeDupIDA|removeDupIDL|idm2DL|idm2demogr|idm2PhoneMain|idm2PhoneCell|idm
+               2PhoneFax|idv2Vehicle|aty2email|aty2phoneMain|aty2phoneFax|aty2phoneCel|aty2phoneBep|aty2phonePag|fixSuff
+               ix|allDTNameCLT|allCANameCLT|allCAAddrCLT|allDTAddrCLT|retrieve) The handler identifier that is used to
+               aggregate data to be converted.
                Each supplies a unique action
 
-  DESTINATION  (names|address|atyp-address|atyp-names) The handler identifier that is used to tell the program how to
-               convert
+  DESTINATION  (IDMpersons|IDMaddress|IDApersons|ATYaddress|ATYpersons|CLTPersons|CLTAddress) The handler identifier
+               that is used to tell the program how to convert
 
 OPTIONS
   -E, --errors=errors          File name to output errors to. Leave blank to not receive error logs

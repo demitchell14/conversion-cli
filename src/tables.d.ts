@@ -165,6 +165,7 @@ export declare namespace DT {
 
 export declare namespace STAGING {
   interface DCT_PERSONS_STAGING {
+    [s:string]:any;
     spn: string;
     firstname: string;
     middlename: string;
@@ -190,6 +191,7 @@ export declare namespace STAGING {
     }
 
     interface DCT_ADDRESSESS_STAGING {
+    [s:string] :any
     SPN: string,
     ADDRESSTYP: string,
     PostedDate: string,

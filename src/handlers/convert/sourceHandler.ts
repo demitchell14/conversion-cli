@@ -36,6 +36,28 @@ export class SourceHandler {
     order by idm_idm_no
     OFFSET ${offset} ROWS FETCH NEXT ${this.limit} ROWS ONLY;`,
 
+    allCAAddrCLT: (offset:number) => `SELECT *, 'CA' as LOCATION FROM ca.CLTP
+    where (clt_address1 <> '' or clt_address2 <> '' 
+    or clt_city_st_zip <> '') and clt_number > '' and substring(clt_number,10,1) <> ' '
+    order by clt_number, clt_clt_seq_no
+    OFFSET ${offset} ROWS FETCH NEXT ${this.limit} ROWS ONLY;`,
+
+    allDTAddrCLT: (offset:number) => `SELECT *, 'DT' as LOCATION FROM dt.CLTP
+    where (clt_address1 <> '' or clt_address2 <> '' 
+    or clt_city_st_zip <> '') and clt_number > '' and substring(clt_number,10,1) <> ' '
+    order by clt_number, clt_clt_seq_no
+    OFFSET ${offset} ROWS FETCH NEXT ${this.limit} ROWS ONLY;`,
+
+    allDTNameCLT: (offset:number) => `
+    select *, 'DT' as LOCATION from dt.cltp where
+    clt_number > '' and clt_name <> 'EX PARTE' and substring(clt_number,10,1) <> ' '
+    order by clt_number, clt_clt_seq_no Offset ${offset} ROWS FETCH NEXT ${this.limit} ROWS ONLY;`,
+
+    allCANameCLT: (offset:number) => `
+    select *, 'CA' as LOCATION from ca.cltp where
+    clt_number > '' and clt_name <> 'EX PARTE' and substring(clt_number,10,1) <> ' '
+    order by clt_number, clt_clt_seq_no Offset ${offset} ROWS FETCH NEXT ${this.limit} ROWS ONLY;`,
+
     idaAll: (offset:number) => `SELECT * FROM id.IDAP
     join id.idmp on ida_idm_no = idm_idm_no where ida_idm_no <> '' and ida_alias <> ''
     and ida_seq <> 0 order by ida_idm_no, ida_alias   
@@ -135,7 +157,7 @@ export class SourceHandler {
 
     aty2phoneMain: (offset:number) =>`
     insert into dct_phones_staging
-    (spn, BASEPHONENUM, CURRENTPHONEFLAG, PHONETYP, ProcessedFlag, PHONESEQ, DATE_TIME_CREATED, DATE_TIME_MODIFIED,user_id )
+    (spn, BASEPHONENUM, CURRENTPHONEFLAG, PHONETYP, ProcessedFlag, PHONESEQ, DATE_TIME_CREATED, DATE_TIME_MODIFIED, user_id)
     select case when SUBSTRING(aty_bar_no,1,3) <> 'BND' then concat('ATY_', trim(aty_bar_no))
     else trim(aty_bar_no) end as SPN,
     concat(ATY_PHONE1, '-', ATY_PHONE2, '-', ATY_PHONE3), 
@@ -145,7 +167,7 @@ export class SourceHandler {
 
     aty2phoneFax: (offset:number) =>`
     insert into dct_phones_staging
-    (spn, BASEPHONENUM, CURRENTPHONEFLAG, PHONETYP, ProcessedFlag, PHONESEQ, DATE_TIME_CREATED, DATE_TIME_MODIFIED,user_id )
+    (spn, BASEPHONENUM, CURRENTPHONEFLAG, PHONETYP, ProcessedFlag, PHONESEQ, DATE_TIME_CREATED, DATE_TIME_MODIFIED, user_id)
     select case when SUBSTRING(aty_bar_no,1,3) <> 'BND' then concat('ATY_', trim(aty_bar_no))
     else trim(aty_bar_no) end as SPN,
     concat(ATY_FAX_PHONE1, '-', ATY_FAX_PHONE2, '-', ATY_FAX_PHONE3), 
@@ -155,7 +177,7 @@ export class SourceHandler {
 
     aty2phoneCel: (offset:number) => `
     insert into dct_phones_staging
-    (spn, BASEPHONENUM, CURRENTPHONEFLAG, PHONETYP, ProcessedFlag, PHONESEQ, DATE_TIME_CREATED, DATE_TIME_MODIFIED,user_id )
+    (spn, BASEPHONENUM, CURRENTPHONEFLAG, PHONETYP, ProcessedFlag, PHONESEQ, DATE_TIME_CREATED, DATE_TIME_MODIFIED, user_id)
     select case when SUBSTRING(aty_bar_no,1,3) <> 'BND' then concat('ATY_', trim(aty_bar_no))
     else trim(aty_bar_no) end as SPN,
     concat(ATY_CEL_PHONE1, '-', ATY_CEL_PHONE2, '-', ATY_CEL_PHONE3),
@@ -165,7 +187,7 @@ export class SourceHandler {
 
     aty2phoneBep: (offset:number) => `
     insert into dct_phones_staging
-    (spn, BASEPHONENUM, CURRENTPHONEFLAG, PHONETYP, ProcessedFlag, PHONESEQ, DATE_TIME_CREATED, DATE_TIME_MODIFIED,user_id )
+    (spn, BASEPHONENUM, CURRENTPHONEFLAG, PHONETYP, ProcessedFlag, PHONESEQ, DATE_TIME_CREATED, DATE_TIME_MODIFIED, user_id)
     select case when SUBSTRING(aty_bar_no,1,3) <> 'BND' then concat('ATY_', trim(aty_bar_no))
     else trim(aty_bar_no) end as SPN,
     concat(ATY_BEP_PHONE1, '-', ATY_BEP_PHONE2, '-', ATY_BEP_PHONE3),
@@ -175,7 +197,7 @@ export class SourceHandler {
 
     aty2phonePag: (offset:number) => `
     insert into dct_phones_staging
-    (spn, BASEPHONENUM, CURRENTPHONEFLAG, PHONETYP, ProcessedFlag, PHONESEQ, DATE_TIME_CREATED, DATE_TIME_MODIFIED,user_id )
+    (spn, BASEPHONENUM, CURRENTPHONEFLAG, PHONETYP, ProcessedFlag, PHONESEQ, DATE_TIME_CREATED, DATE_TIME_MODIFIED, user_id)
     select case when SUBSTRING(aty_bar_no,1,3) <> 'BND' then concat('ATY_', trim(aty_bar_no))
     else trim(aty_bar_no) end as SPN,
     concat(ATY_PAG_PHONE1, '-', ATY_PAG_PHONE2, '-', ATY_PAG_PHONE3),
@@ -183,6 +205,10 @@ export class SourceHandler {
     from dt.atyp where trim(ATY_BAR_NO) <> '1' and (ATY_PAG_PHONE2 <> '' or  ATY_PAG_PHONE3 <> '');    
     `,
 
+    fixSuffix: (offset:number) => `
+    update DCT_Persons_Staging set SUFFIX_NAME = replace(middlename, '.', ''), middlename = ''
+    where middlename in ('JR', 'JR.', 'SR', 'SR.', 'II', 'II.', 'III', 
+    'III.', 'IV', 'IV.', 'ESQ', 'ESQ.') and SUFFIX_NAME = ''`
   }
 
   async *execute(offset = this.offset): AsyncIterableIterator<Array<Partial<any>>> {

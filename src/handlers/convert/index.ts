@@ -17,6 +17,8 @@ export const DestinationHandlers = {
   IDApersons: "./destination/ida/persons",
   ATYaddress: "./destination/aty/address",
   ATYpersons: "./destination/aty/persons",
+  CLTPersons: "./destination/clt/persons",
+  CLTAddress: "./destination/clt/address",
 }
 
 export const SourceHandlers = {
@@ -38,6 +40,11 @@ export const SourceHandlers = {
   aty2phoneCel: "./source/retrieve",
   aty2phoneBep: "./source/retrieve",
   aty2phonePag: "./source/retrieve",
+  fixSuffix: "./source/retrieve",
+  allDTNameCLT: "./source/retrieve",
+  allCANameCLT: "./source/retrieve",
+  allCAAddrCLT: "./source/retrieve",
+  allDTAddrCLT: "./source/retrieve",
   retrieve: "./source/retrieve",
 }
 
