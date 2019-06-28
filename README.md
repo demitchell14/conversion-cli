@@ -60,8 +60,8 @@ USAGE
 ARGUMENTS
   SOURCE       (idmAll|idmAddr|idaAll|atyAll|removeDupIDA|removeDupIDL|idm2DL|idm2demogr|idm2PhoneMain|idm2PhoneCell|idm
                2PhoneFax|idv2Vehicle|aty2email|aty2phoneMain|aty2phoneFax|aty2phoneCel|aty2phoneBep|aty2phonePag|fixSuff
-               ix|allDTNameCLT|allCANameCLT|allCAAddrCLT|allDTAddrCLT|retrieve) The handler identifier that is used to
-               aggregate data to be converted.
+               ix|allDTNameCLT|allCANameCLT|allCAAddrCLT|allDTAddrCLT|allCAPhoneCLT|allDTPhoneCLT|retrieve) The handler
+               identifier that is used to aggregate data to be converted.
                Each supplies a unique action
 
   DESTINATION  (IDMpersons|IDMaddress|IDApersons|ATYaddress|ATYpersons|CLTPersons|CLTAddress) The handler identifier

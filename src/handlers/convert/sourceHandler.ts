@@ -58,6 +58,26 @@ export class SourceHandler {
     clt_number > '' and clt_name <> 'EX PARTE' and substring(clt_number,10,1) <> ' '
     order by clt_number, clt_clt_seq_no Offset ${offset} ROWS FETCH NEXT ${this.limit} ROWS ONLY;`,
 
+    allCAPhoneCLT: (offset:number) => `
+    insert into dct_phones_staging
+    (spn, BASEPHONENUM, CURRENTPHONEFLAG, PHONETYP, ProcessedFlag,
+    PHONESEQ, DATE_TIME_CREATED, DATE_TIME_MODIFIED, user_id) select 
+    concat('CA-', trim(clt_number), '-', clt_clt_seq_no), 
+    concat(CLT_PHONE1, '-', CLT_PHONE2, '-', CLT_PHONE3),
+    'Y', 'MAIN', 'Y', 0, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 'bwilder'
+    from ca.cltp where (CLT_PHONE2 <> '' or  CLT_PHONE3 <> '')
+    and clt_number > '' and clt_name <> 'EX PARTE' and substring(clt_number,10,1) <> ' ';`,
+
+    allDTPhoneCLT: (offset:number) => `
+    insert into dct_phones_staging
+    (spn, BASEPHONENUM, CURRENTPHONEFLAG, PHONETYP, ProcessedFlag,
+    PHONESEQ, DATE_TIME_CREATED, DATE_TIME_MODIFIED, user_id) select 
+    concat('DT-', trim(clt_number), '-', clt_clt_seq_no), 
+    concat(CLT_PHONE1, '-', CLT_PHONE2, '-', CLT_PHONE3),
+    'Y', 'MAIN', 'Y', 0, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 'bwilder'
+    from dt.cltp where (CLT_PHONE2 <> '' or  CLT_PHONE3 <> '')
+    and clt_number > '' and clt_name <> 'EX PARTE' and substring(clt_number,10,1) <> ' ';`,
+
     idaAll: (offset:number) => `SELECT * FROM id.IDAP
     join id.idmp on ida_idm_no = idm_idm_no where ida_idm_no <> '' and ida_alias <> ''
     and ida_seq <> 0 order by ida_idm_no, ida_alias   

@@ -45,6 +45,8 @@ export const SourceHandlers = {
   allCANameCLT: "./source/retrieve",
   allCAAddrCLT: "./source/retrieve",
   allDTAddrCLT: "./source/retrieve",
+  allCAPhoneCLT: "./source/retrieve",
+  allDTPhoneCLT: "./source/retrieve",
   retrieve: "./source/retrieve",
 }
 
