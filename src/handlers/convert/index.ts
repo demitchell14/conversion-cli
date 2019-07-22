@@ -40,6 +40,8 @@ export const SourceHandlers = {
   aty2phoneCel: "./source/retrieve",
   aty2phoneBep: "./source/retrieve",
   aty2phonePag: "./source/retrieve",
+  aty2aty: "./source/retrieve",
+  aty2bnd: "./source/retrieve",
   fixSuffix: "./source/retrieve",
   allDTNameCLT: "./source/retrieve",
   allCANameCLT: "./source/retrieve",
@@ -47,6 +49,8 @@ export const SourceHandlers = {
   allDTAddrCLT: "./source/retrieve",
   allCAPhoneCLT: "./source/retrieve",
   allDTPhoneCLT: "./source/retrieve",
+  FixSuffixSR: "./source/retrieve",
+  FixSuffixJR: "./source/retrieve",
   retrieve: "./source/retrieve",
 }
 

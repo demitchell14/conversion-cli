@@ -86,6 +86,12 @@ export class SourceHandler {
     atyAll: (offset:number) => `SELECT * FROM dt.atyp WHERE aty_bar_no <> '       1' 
     ORDER BY ATY_BAR_NO OFFSET ${offset} ROWS FETCH NEXT ${this.limit} ROWS ONLY;`,
 
+    FixSuffixSR: (offset:number) => `update DCT_Persons_Staging set suffix_name = 'Sr.'
+    where SUFFIX_NAME = 'SR';`,
+
+    FixSuffixJR: (offset:number) => `update DCT_Persons_Staging set suffix_name = 'Jr.'
+    where SUFFIX_NAME = 'JR';`,
+
     removeDupIDA: (offset:number) => `with tempida (duplicateRecCount, ida_idm_no, ida_alias) as (
     select ROW_NUMBER() over(PARTITION BY ida_idm_no, ida_alias 
     order by ida_idm_no, ida_alias) as duplicateRecCount, 
@@ -110,6 +116,22 @@ export class SourceHandler {
     from id.idlp 
     join id.idmp on ltrim(rtrim(idl_idm_no)) = ltrim(rtrim(IDM_IDM_NO))
     where concat(idl_dl_number_key, idl_dl_number_rest) <> '';`,
+
+    aty2aty: (offset:number) => `insert into dbo.DCT_Attorney_Staging (Attorney_SPN, Common_Name, Attorney_Code,
+    BAR_ASSOC_CODE, bar_assoc_num, attorney_Status_code,date_time_created, date_time_modified, user_id)
+    select CONCAT('ATY_', ltrim(rtrim(aty_bar_no))) as attorney_spn, aty_form_name as common_name, 
+    ltrim(rtrim(aty_bar_no)) as attorney_code, 'TX' as BAR_ASSOC_CODE, ltrim(rtrim(ATY_BAR_NO)) as bar_assoc_num,
+    case when aty_inactive_sw = 'Y' then 'I' else 'A' end as attorney_status_code,
+    CURRENT_TIMESTAMP as date_time_created, CURRENT_TIMESTAMP as date_time_modified,
+    'bwilder' as user_id from dt.atyp where SUBSTRING(aty_bar_no,1,3) <> 'BND' and aty_bar_no <> '       1'`,
+
+    aty2bnd: (offset:number) => `insert into dbo.DCT_Bondsman_Staging (BONDSMAN_SPN, Common_Name, bondsman_code, 
+    CERTIFICATION_NUMBER, surety_balance_max, effective_date, end_date, date_time_created, date_time_modified, user_id)
+    select CONCAT('BND_', substring(aty_bar_no,4,8)) as bondsman_spn, aty_form_name as common_name, 
+    CONCAT('BND_', substring(aty_bar_no,4,8)) as bondsman_code, substring(aty_bar_no,4,8) as CERTIFICATION_NUMBER,
+    ATY_BOND_LIMIT as surety_balance_max, CURRENT_TIMESTAMP as effective_date, CURRENT_TIMESTAMP as end_date,
+    CURRENT_TIMESTAMP as date_time_created, CURRENT_TIMESTAMP as date_time_modified, 'bwilder' as user_id from dt.atyp 
+    where SUBSTRING(aty_bar_no,1,3) = 'BND' and aty_bar_no <> '       1'`,
 
     idm2PhoneMain: (offset:number) =>`
     insert into dct_phones_staging
